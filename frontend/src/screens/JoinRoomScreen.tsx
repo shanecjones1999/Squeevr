@@ -1,29 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, LogIn } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
+import { usePeerConnection } from '../hooks/usePeerConnection'; // Import usePeerConnection
+import { GameScreen } from '../types';
 
 const JoinRoomScreen: React.FC = () => {
-  const { setScreen, joinRoom } = useGameStore();
+  const { setScreen, setRoomCode, setPlayerName } = useGameStore();
   const [name, setName] = useState('');
-  const [roomCode, setRoomCode] = useState('');
+  const [roomCode, setRoomCodeState] = useState('');
   const [error, setError] = useState('');
-  
-  const handleJoin = () => {
+  const [clientId, setClientId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (clientId) {
+      console.log("clientId", clientId);
+    }
+  }, [clientId]);
+
+  usePeerConnection(clientId); // Get sendMessage from usePeerConnection
+
+  const handleJoin = async () => {
     if (!name.trim()) {
       setError('Please enter your name');
       return;
     }
-    
+
     if (!roomCode.trim()) {
       setError('Please enter a room code');
       return;
     }
-    
+
     setError('');
-    joinRoom(roomCode.toUpperCase(), name);
+
+    try {
+      const response = await fetch('http://localhost:8000/api/join_room', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          room_code: roomCode.toUpperCase(),
+          name: name,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Join room successful
+        setRoomCode(data.room_code);
+        setPlayerName(name);
+        setClientId(data.player_id);
+        setScreen('game' as GameScreen); // Navigate to game screen
+      } else {
+        // Join room failed
+        setError(data.message || 'Failed to join room');
+      }
+    } catch (error) {
+      console.error('Failed to join room:', error);
+      setError('Failed to join room');
+    }
   };
-  
+
   return (
     <motion.div
       className="w-full max-w-md"
@@ -34,16 +73,16 @@ const JoinRoomScreen: React.FC = () => {
     >
       <div className="bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-700">
         <div className="flex justify-between items-center mb-6">
-          <button 
+          <button
             className="text-gray-400 hover:text-white transition-colors"
-            onClick={() => setScreen('home')}
+            onClick={() => setScreen('home' as GameScreen)}
           >
             <ArrowLeft size={24} />
           </button>
           <h2 className="text-2xl font-bold text-center">Join Room</h2>
           <div className="w-6"></div> {/* Spacer for alignment */}
         </div>
-        
+
         <div className="space-y-4 mb-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
@@ -59,7 +98,7 @@ const JoinRoomScreen: React.FC = () => {
               maxLength={15}
             />
           </div>
-          
+
           <div>
             <label htmlFor="roomCode" className="block text-sm font-medium text-gray-300 mb-1">
               Room Code
@@ -70,17 +109,17 @@ const JoinRoomScreen: React.FC = () => {
               className="input w-full uppercase"
               placeholder="Enter room code"
               value={roomCode}
-              onChange={(e) => setRoomCode(e.target.value)}
+              onChange={(e) => setRoomCodeState(e.target.value)}
               maxLength={6}
             />
           </div>
-          
+
           {error && (
             <p className="text-red-500 text-sm">{error}</p>
           )}
         </div>
-        
-        <button 
+
+        <button
           className="btn-primary w-full flex items-center justify-center gap-2"
           onClick={handleJoin}
         >

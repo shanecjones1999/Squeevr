@@ -10,24 +10,28 @@ interface GameStore {
   playerName: string;
   players: Player[];
   gameState: GameState;
-  
+  winner?: string;
+  peerId?: string;
+
   // Game settings
   canvasWidth: number;
   canvasHeight: number;
-  
+
   // Player state
   localPlayerState: PlayerState | null;
   playerStates: Record<string, PlayerState>;
-  
+
   // Game actions
   setScreen: (screen: GameScreen) => void;
+  setRoomCode: (code: string) => void;
+  setPlayerName: (name: string) => void; // Add setPlayerName
   createRoom: () => void;
   joinRoom: (code: string, name: string) => void;
   startGame: () => void;
   endGame: (winnerId?: string) => void;
   resetGame: () => void;
   leaveRoom: () => void;
-  
+
   // Player actions
   addPlayer: (id: string, name: string) => void;
   removePlayer: (id: string) => void;
@@ -54,18 +58,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
   playerName: '',
   players: [],
   gameState: 'waiting',
-  
+
   // Game settings
   canvasWidth: 800,
   canvasHeight: 600,
-  
+
   // Player state
   localPlayerState: null,
   playerStates: {},
-  
+
   // Game actions
   setScreen: (screen) => set({ currentScreen: screen }),
-  
+  setRoomCode: (code) => set({ roomCode: code }),
+  setPlayerName: (name: string) => set({ playerName: name }), // Add setPlayerName
+  setPeerId: (id: string) => set({ peerId: id }),
+
   createRoom: () => {
     const roomCode = nanoid(6).toUpperCase();
     set({
@@ -76,7 +83,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       players: [],
     });
   },
-  
+
   joinRoom: (code, name) => {
     set({
       roomCode: code,
@@ -86,18 +93,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameState: 'waiting',
     });
   },
-  
+
   startGame: () => {
-    set({ 
+    set({
       gameState: 'playing',
       currentScreen: 'game'
     });
   },
-  
+
   endGame: (winnerId) => {
     set({ gameState: 'ended', winner: winnerId });
   },
-  
+
   resetGame: () => {
     set({
       gameState: 'waiting',
@@ -105,7 +112,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       localPlayerState: null,
     });
   },
-  
+
   leaveRoom: () => {
     set({
       currentScreen: 'home',
@@ -118,14 +125,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
       localPlayerState: null,
     });
   },
-  
+
   // Player actions
   addPlayer: (id, name) => {
     // Don't add the host as a player
-    if (get().isHost && id === get().peerId) {
+    if (get().isHost && get().peerId && id === get().peerId) {
       return;
     }
-    
+
     const { players } = get();
     const colors = [
       '#FF5E5B', // Red
@@ -137,10 +144,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
       '#5CFFA0', // Green
       '#FF5CE1', // Pink
     ];
-    
+
     const playerColor = colors[players.length % colors.length];
     const newPlayer = { id, name, color: playerColor };
-    
+
     set({
       players: [...players, newPlayer],
       playerStates: {
@@ -155,18 +162,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
       }
     });
   },
-  
+
   removePlayer: (id) => {
     const { players, playerStates } = get();
     const newPlayerStates = { ...playerStates };
     delete newPlayerStates[id];
-    
+
     set({
       players: players.filter(p => p.id !== id),
       playerStates: newPlayerStates,
     });
   },
-  
+
   updatePlayerState: (id, state) => {
     const { playerStates } = get();
     set({
@@ -179,7 +186,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       },
     });
   },
-  
+
   setLocalPlayerDirection: (direction) => {
     const { localPlayerState } = get();
     if (localPlayerState) {
