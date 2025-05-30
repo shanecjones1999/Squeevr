@@ -21,7 +21,6 @@ const CreateRoomScreen: React.FC = () => {
     useEffect(() => {
         const createRoom = async () => {
             try {
-                // 1. Create the room
                 const createRoomResponse = await fetch(
                     "http://localhost:8000/api/create_room",
                     {
@@ -31,17 +30,15 @@ const CreateRoomScreen: React.FC = () => {
                 const createRoomData = await createRoomResponse.json();
                 const newRoomCode = createRoomData.room_code;
                 setRoomCode(newRoomCode);
-
                 setClientId(newRoomCode);
                 setPlayerName("Host");
             } catch (error) {
                 console.error("Failed to create room:", error);
-                // Handle error appropriately
             }
         };
 
         createRoom();
-    }, [setRoomCode, setPlayerName, setScreen]);
+    }, [setPlayerName, setRoomCode]);
 
     const { isConnected } = usePeerConnection(clientId);
 
@@ -85,6 +82,7 @@ const CreateRoomScreen: React.FC = () => {
                     <button
                         className="btn-secondary py-2 px-3 flex items-center gap-1"
                         onClick={copyRoomCode}
+                        title="Copy Room Code"
                     >
                         <Copy size={16} />
                         <span>{copied ? "Copied!" : "Copy"}</span>
