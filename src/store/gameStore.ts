@@ -1,0 +1,194 @@
+import { create } from 'zustand';
+import { nanoid } from 'nanoid';
+import { GameState, PlayerState, Player, GameScreen } from '../types';
+
+interface GameStore {
+  // Game state
+  currentScreen: GameScreen;
+  roomCode: string | null;
+  isHost: boolean;
+  playerName: string;
+  players: Player[];
+  gameState: GameState;
+  
+  // Game settings
+  canvasWidth: number;
+  canvasHeight: number;
+  
+  // Player state
+  localPlayerState: PlayerState | null;
+  playerStates: Record<string, PlayerState>;
+  
+  // Game actions
+  setScreen: (screen: GameScreen) => void;
+  createRoom: () => void;
+  joinRoom: (code: string, name: string) => void;
+  startGame: () => void;
+  endGame: (winnerId?: string) => void;
+  resetGame: () => void;
+  leaveRoom: () => void;
+  
+  // Player actions
+  addPlayer: (id: string, name: string) => void;
+  removePlayer: (id: string) => void;
+  updatePlayerState: (id: string, state: Partial<PlayerState>) => void;
+  setLocalPlayerDirection: (direction: 'left' | 'right' | null) => void;
+}
+
+const DEFAULT_PLAYER_STATE: PlayerState = {
+  x: 0,
+  y: 0,
+  angle: 0,
+  speed: 2,
+  isAlive: true,
+  color: '',
+  points: [],
+  turning: null,
+};
+
+export const useGameStore = create<GameStore>((set, get) => ({
+  // Game state
+  currentScreen: 'home',
+  roomCode: null,
+  isHost: false,
+  playerName: '',
+  players: [],
+  gameState: 'waiting',
+  
+  // Game settings
+  canvasWidth: 800,
+  canvasHeight: 600,
+  
+  // Player state
+  localPlayerState: null,
+  playerStates: {},
+  
+  // Game actions
+  setScreen: (screen) => set({ currentScreen: screen }),
+  
+  createRoom: () => {
+    const roomCode = nanoid(6).toUpperCase();
+    set({
+      roomCode,
+      isHost: true,
+      currentScreen: 'create-room',
+      gameState: 'waiting',
+      players: [],
+    });
+  },
+  
+  joinRoom: (code, name) => {
+    set({
+      roomCode: code,
+      isHost: false,
+      playerName: name,
+      currentScreen: 'game',
+      gameState: 'waiting',
+    });
+  },
+  
+  startGame: () => {
+    set({ 
+      gameState: 'playing',
+      currentScreen: 'game'
+    });
+  },
+  
+  endGame: (winnerId) => {
+    set({ gameState: 'ended', winner: winnerId });
+  },
+  
+  resetGame: () => {
+    set({
+      gameState: 'waiting',
+      playerStates: {},
+      localPlayerState: null,
+    });
+  },
+  
+  leaveRoom: () => {
+    set({
+      currentScreen: 'home',
+      roomCode: null,
+      isHost: false,
+      playerName: '',
+      players: [],
+      gameState: 'waiting',
+      playerStates: {},
+      localPlayerState: null,
+    });
+  },
+  
+  // Player actions
+  addPlayer: (id, name) => {
+    // Don't add the host as a player
+    if (get().isHost && id === get().peerId) {
+      return;
+    }
+    
+    const { players } = get();
+    const colors = [
+      '#FF5E5B', // Red
+      '#39E5B6', // Teal
+      '#FFEC5C', // Yellow
+      '#5CB9FF', // Blue
+      '#FF9F68', // Orange
+      '#B78AFF', // Purple
+      '#5CFFA0', // Green
+      '#FF5CE1', // Pink
+    ];
+    
+    const playerColor = colors[players.length % colors.length];
+    const newPlayer = { id, name, color: playerColor };
+    
+    set({
+      players: [...players, newPlayer],
+      playerStates: {
+        ...get().playerStates,
+        [id]: {
+          ...DEFAULT_PLAYER_STATE,
+          color: playerColor,
+          x: Math.random() * get().canvasWidth,
+          y: Math.random() * get().canvasHeight,
+          angle: Math.random() * Math.PI * 2,
+        }
+      }
+    });
+  },
+  
+  removePlayer: (id) => {
+    const { players, playerStates } = get();
+    const newPlayerStates = { ...playerStates };
+    delete newPlayerStates[id];
+    
+    set({
+      players: players.filter(p => p.id !== id),
+      playerStates: newPlayerStates,
+    });
+  },
+  
+  updatePlayerState: (id, state) => {
+    const { playerStates } = get();
+    set({
+      playerStates: {
+        ...playerStates,
+        [id]: {
+          ...playerStates[id],
+          ...state,
+        },
+      },
+    });
+  },
+  
+  setLocalPlayerDirection: (direction) => {
+    const { localPlayerState } = get();
+    if (localPlayerState) {
+      set({
+        localPlayerState: {
+          ...localPlayerState,
+          turning: direction,
+        },
+      });
+    }
+  },
+}));
