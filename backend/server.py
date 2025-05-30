@@ -62,7 +62,7 @@ class JoinRoomResponse(BaseModel):
     name: str
 
 
-@app.post("/join_room", response_model=JoinRoomResponse)
+@app.post("/api/join_room", response_model=JoinRoomResponse)
 def join_room(request: JoinRoomRequest):
     room_code = request.room_code.upper()
     player_name = request.name.strip()
@@ -172,8 +172,8 @@ async def websocket_endpoint(websocket: WebSocket, room_code: str,
                                                  message['state']['left'],
                                                  message['state']['right'])
 
-    except WebSocketDisconnect:
-        print("Disconnecting websocket", client_type)
+    except WebSocketDisconnect as e:
+        print("Disconnecting websocket", client_type, e)
         if client_type == "tv":
             game = game_manager.get_game(room_code)
             if not game:
