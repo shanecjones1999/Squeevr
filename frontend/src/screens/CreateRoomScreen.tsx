@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, ArrowLeft, Play, UserPlus } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';

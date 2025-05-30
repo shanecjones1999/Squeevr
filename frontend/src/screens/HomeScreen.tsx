@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Gamepad2, Users } from 'lucide-react';
+import { Squirrel, Users } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
 
 const HomeScreen: React.FC = () => {
@@ -26,13 +26,13 @@ const HomeScreen: React.FC = () => {
               ease: "easeInOut" 
             }}
           >
-            <Gamepad2 className="h-16 w-16 text-indigo-500 mb-4 neon-glow" />
+            <Squirrel className="h-16 w-16 text-indigo-500 mb-4 neon-glow" />
           </motion.div>
           <h1 className="text-3xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">
-            CurveDash
+            Squeevr
           </h1>
           <p className="text-gray-400 text-center mb-4">
-            A multiplayer line game inspired by Curve Fever
+            A multiplayer line game
           </p>
           
           <div className="w-full border-t border-gray-700 my-4"></div>

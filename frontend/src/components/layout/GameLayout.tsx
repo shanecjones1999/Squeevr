@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Gamepad2, Github } from 'lucide-react';
+import { Squirrel, Github } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface GameLayoutProps {
@@ -17,9 +17,9 @@ const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Gamepad2 className="h-8 w-8 text-indigo-500" />
+            <Squirrel className="h-8 w-8 text-indigo-500" />
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">
-              CurveDash
+              Squeevr
             </h1>
           </motion.div>
           
@@ -41,7 +41,7 @@ const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
       
       <footer className="p-4 border-t border-gray-800 text-center text-gray-500 text-sm">
         <div className="container mx-auto">
-          <p>© 2025 CurveDash - A Multiplayer Line Game</p>
+          <p>© 2025 Squeevr - A Multiplayer Line Game</p>
         </div>
       </footer>
     </div>
