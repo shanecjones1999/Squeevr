@@ -8,6 +8,7 @@ interface GameStore {
     roomCode: string | null;
     isHost: boolean;
     playerName: string;
+    clientId: string | null;
     players: Player[];
     gameState: GameState;
     winner?: string;
@@ -56,6 +57,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     roomCode: null,
     isHost: false,
     playerName: "",
+    clientId: null,
     players: [],
     gameState: "waiting",
 

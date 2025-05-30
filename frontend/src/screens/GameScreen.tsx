@@ -1,19 +1,24 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../store/gameStore";
-import GameCanvas from "../components/game/GameCanvas";
-import GameControls from "../components/game/GameControls";
-import PlayerList from "../components/game/PlayerList";
 import GameOver from "../components/game/GameOver";
 import { usePeerConnection } from "../hooks/usePeerConnection";
-import { useGameLoop } from "../hooks/useGameLoop";
+import PlayerGameScreen from "./PlayerGameScreen";
+import TvGameScreen from "./TvGameScreen";
+import PlayerList from "../components/game/PlayerList";
 
 const GameScreen: React.FC = () => {
-    const { isHost, gameState, players, startGame, resetGame, leaveRoom } =
-        useGameStore();
+    const {
+        isHost,
+        gameState,
+        players,
+        startGame,
+        resetGame,
+        leaveRoom,
+        clientId,
+    } = useGameStore();
 
-    const { isConnected } = usePeerConnection();
-    const { isInitialized } = useGameLoop();
+    const { isConnected } = usePeerConnection(clientId);
 
     return (
         <motion.div
@@ -72,22 +77,8 @@ const GameScreen: React.FC = () => {
                     </div>
                 )}
 
-                {gameState === "playing" && (
-                    <div className="game-container h-full flex flex-col items-center justify-center">
-                        <div className="relative">
-                            <GameCanvas />
-                            {!isHost && (
-                                <div className="absolute inset-x-0 bottom-8">
-                                    <GameControls />
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mt-6 w-full max-w-[800px]">
-                            <PlayerList players={players} />
-                        </div>
-                    </div>
-                )}
+                {gameState === "playing" &&
+                    (isHost ? <TvGameScreen /> : <PlayerGameScreen />)}
 
                 {gameState === "ended" && (
                     <GameOver onRestart={resetGame} onExit={leaveRoom} />
