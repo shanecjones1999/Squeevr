@@ -1,12 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { useGameStore } from "../../store/gameStore";
-import { useGameLoop } from "../../hooks/useGameLoop";
 
 const GameCanvas: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { playerStates, players, gameState } = useGameStore();
-
-    const { isInitialized } = useGameLoop(canvasRef);
 
     // Set fixed canvas size
     useEffect(() => {
@@ -35,7 +32,7 @@ const GameCanvas: React.FC = () => {
 
         // Draw player trails
         Object.entries(playerStates).forEach(([playerId, playerState]) => {
-            const player = players.find((p) => p.id === playerId);
+            const player = players[playerId];
             if (!player) return;
 
             // Draw trail
