@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, LogIn } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
-// import { usePeerConnection } from "../hooks/usePeerConnection"; // Import usePeerConnection
 import { GameScreen } from "../types";
 
 const JoinRoomScreen: React.FC = () => {
@@ -10,8 +9,6 @@ const JoinRoomScreen: React.FC = () => {
     const [name, setName] = useState("");
     const [roomCode, setRoomCodeState] = useState("");
     const [error, setError] = useState("");
-
-    // usePeerConnection(clientId); // Get sendMessage from usePeerConnection
 
     const handleJoin = async () => {
         if (!name.trim()) {

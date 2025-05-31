@@ -12,14 +12,14 @@ export const usePeerConnection = (clientId: string | null) => {
 
         const ws = new WebSocket(
             `ws://localhost:8000/ws/${roomCode}/${
-                playerName == "Host" ? "tv" : "player"
+                isHost ? "tv" : "player"
             }/${clientId}`
         );
 
         ws.onopen = () => {
             console.log("Connected to WebSocket server");
             setIsConnected(true);
-            if (playerName != "Host") {
+            if (!isHost) {
                 ws.send(JSON.stringify({ type: "join", name: playerName }));
             }
         };
@@ -59,6 +59,8 @@ export const usePeerConnection = (clientId: string | null) => {
                             addPlayer(player.id, player.name);
                         }
                     });
+                } else if (data.type === "game_update") {
+                    console.log("game update!");
                 }
             } catch (error) {
                 console.error("Error parsing message:", error);
