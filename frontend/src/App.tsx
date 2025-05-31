@@ -6,6 +6,8 @@ import CreateRoomScreen from "./screens/CreateRoomScreen";
 import JoinRoomScreen from "./screens/JoinRoomScreen";
 import GameScreen from "./screens/GameScreen";
 import GameLayout from "./components/layout/GameLayout";
+import PlayerGameScreen from "./screens/PlayerGameScreen";
+// import { div, h1 } from "framer-motion/client";
 
 function App() {
     const { currentScreen } = useGameStore();
@@ -21,6 +23,10 @@ function App() {
                     <JoinRoomScreen key="join-room" />
                 )}
                 {currentScreen === "game" && <GameScreen key="game" />}
+                {currentScreen === "player-screen" && (
+                    // <h1>Hello world</h1>
+                    <PlayerGameScreen key="player-screen" />
+                )}
             </AnimatePresence>
         </GameLayout>
     );

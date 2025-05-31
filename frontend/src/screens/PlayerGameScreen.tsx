@@ -3,10 +3,12 @@ import { motion } from "framer-motion";
 import { useGameStore } from "../store/gameStore";
 import GameCanvas from "../components/game/GameCanvas";
 import GameControls from "../components/game/GameControls";
+import { usePeerConnection } from "../hooks/usePeerConnection";
 import PlayerList from "../components/game/PlayerList";
 
 const PlayerGameScreen: React.FC = () => {
-    const { gameState, players } = useGameStore();
+    const { gameState, players, clientId } = useGameStore();
+    usePeerConnection(clientId); // Get sendMessage from usePeerConnection
 
     return (
         <motion.div

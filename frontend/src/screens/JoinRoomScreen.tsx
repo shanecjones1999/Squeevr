@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, LogIn } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
-import { usePeerConnection } from "../hooks/usePeerConnection"; // Import usePeerConnection
+// import { usePeerConnection } from "../hooks/usePeerConnection"; // Import usePeerConnection
 import { GameScreen } from "../types";
 
 const JoinRoomScreen: React.FC = () => {
-    const { setScreen, setRoomCode, setPlayerName } = useGameStore();
+    const { setScreen, setRoomCode, setPlayerName, setClientId } =
+        useGameStore();
     const [name, setName] = useState("");
     const [roomCode, setRoomCodeState] = useState("");
     const [error, setError] = useState("");
-    const [clientId, setClientId] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (clientId) {
-            console.log("clientId", clientId);
-        }
-    }, [clientId]);
-
-    usePeerConnection(clientId); // Get sendMessage from usePeerConnection
+    // usePeerConnection(clientId); // Get sendMessage from usePeerConnection
 
     const handleJoin = async () => {
         if (!name.trim()) {
@@ -55,7 +49,7 @@ const JoinRoomScreen: React.FC = () => {
                 setRoomCode(data.room_code);
                 setPlayerName(name);
                 setClientId(data.player_id);
-                setScreen("game" as GameScreen); // Navigate to game screen
+                setScreen("player-screen" as GameScreen); // Navigate to player screen
             } else {
                 // Join room failed
                 setError(data.message || "Failed to join room");
