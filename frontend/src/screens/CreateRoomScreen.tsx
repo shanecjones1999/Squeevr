@@ -66,11 +66,11 @@ const CreateRoomScreen: React.FC = () => {
                     <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold text-gray-300">Players</h3>
                         <span className="text-sm text-gray-400">
-                            {players.length} joined
+                            {Object.keys(players).length} joined
                         </span>
                     </div>
 
-                    {players.length === 0 ? (
+                    {Object.keys(players).length === 0 ? (
                         <div className="bg-gray-900 rounded-lg p-6 text-center text-gray-400 border border-gray-700 border-dashed flex flex-col items-center gap-2">
                             <UserPlus size={24} className="text-gray-500" />
                             <p>Waiting for players to join...</p>
@@ -86,11 +86,13 @@ const CreateRoomScreen: React.FC = () => {
                 <div className="flex gap-4">
                     <button
                         className="btn-primary flex-1 flex items-center justify-center gap-2"
-                        disabled={players.length < 2 || !isConnected}
+                        disabled={
+                            Object.keys(players).length < 1 || !isConnected
+                        }
                         onClick={() => startGame()}
                     >
                         <Play size={20} />
-                        Start Game ({players.length}/2 players)
+                        Start Game ({Object.keys(players).length})
                     </button>
                 </div>
 

@@ -8,7 +8,7 @@ interface GameStore {
     isHost: boolean;
     playerName: string;
     clientId: string | null;
-    players: Player[];
+    players: Record<string, Player>;
     gameState: GameState;
     winner?: string;
     peerId?: string;
@@ -58,7 +58,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     isHost: false,
     playerName: "",
     clientId: null,
-    players: [],
+    players: {},
     gameState: "waiting",
 
     // Game settings
@@ -81,7 +81,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             isHost: true,
             currentScreen: "create-room",
             gameState: "waiting",
-            players: [],
+            players: {},
             clientId: roomCode,
             playerName: "Host",
         });
@@ -123,7 +123,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             roomCode: null,
             isHost: false,
             playerName: "",
-            players: [],
+            players: {},
             gameState: "waiting",
             playerStates: {},
             localPlayerState: null,
@@ -149,11 +149,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
             "#FF5CE1", // Pink
         ];
 
-        const playerColor = colors[players.length % colors.length];
+        const playerColor = colors[Object.keys(players).length % colors.length];
         const newPlayer = { id, name, color: playerColor };
 
         set({
-            players: [...players, newPlayer],
+            players: {
+                ...players,
+                [id]: newPlayer,
+            },
             playerStates: {
                 ...get().playerStates,
                 [id]: {
@@ -172,8 +175,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
         const newPlayerStates = { ...playerStates };
         delete newPlayerStates[id];
 
+        const newPlayers = { ...players };
+        delete newPlayers[id];
+
         set({
-            players: players.filter((p) => p.id !== id),
+            players: newPlayers,
             playerStates: newPlayerStates,
         });
     },

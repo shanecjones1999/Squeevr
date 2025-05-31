@@ -43,7 +43,7 @@ export const usePeerConnection = (clientId: string | null) => {
                     }[];
 
                     // Remove players that are not in the new list
-                    currentPlayers.forEach((player) => {
+                    Object.values(currentPlayers).forEach((player) => {
                         if (!newPlayers.find((p) => p.id === player.id)) {
                             removePlayer(player.id);
                         }
@@ -51,7 +51,11 @@ export const usePeerConnection = (clientId: string | null) => {
 
                     // Add players that are in the new list but not in the current list
                     newPlayers.forEach((player) => {
-                        if (!currentPlayers.find((p) => p.id === player.id)) {
+                        if (
+                            !Object.values(currentPlayers).find(
+                                (p) => p.id === player.id
+                            )
+                        ) {
                             addPlayer(player.id, player.name);
                         }
                     });
