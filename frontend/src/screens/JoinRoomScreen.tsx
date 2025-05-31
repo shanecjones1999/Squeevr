@@ -6,8 +6,7 @@ import { useGameStore } from "../store/gameStore";
 import { GameScreen } from "../types";
 
 const JoinRoomScreen: React.FC = () => {
-    const { setScreen, setRoomCode, setPlayerName, setClientId } =
-        useGameStore();
+    const { setScreen, joinRoom } = useGameStore();
     const [name, setName] = useState("");
     const [roomCode, setRoomCodeState] = useState("");
     const [error, setError] = useState("");
@@ -46,9 +45,7 @@ const JoinRoomScreen: React.FC = () => {
 
             if (response.ok) {
                 // Join room successful
-                setRoomCode(data.room_code);
-                setPlayerName(name);
-                setClientId(data.player_id);
+                joinRoom(data.room_code, name, data.player_id);
                 setScreen("player-screen" as GameScreen); // Navigate to player screen
             } else {
                 // Join room failed

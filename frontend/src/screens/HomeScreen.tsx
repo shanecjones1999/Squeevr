@@ -4,8 +4,7 @@ import { Squirrel, Users } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
 
 const HomeScreen: React.FC = () => {
-    const { setScreen, setRoomCode, setPlayerName, setClientId } =
-        useGameStore();
+    const { setScreen, createRoomProperties } = useGameStore();
 
     const createRoom = async () => {
         try {
@@ -17,10 +16,7 @@ const HomeScreen: React.FC = () => {
             );
             const createRoomData = await createRoomResponse.json();
             const newRoomCode = createRoomData.room_code;
-            setRoomCode(newRoomCode);
-            setClientId(newRoomCode);
-            setPlayerName("Host");
-            setScreen("create-room");
+            createRoomProperties(newRoomCode);
         } catch (error) {
             console.error("Failed to create room:", error);
         }

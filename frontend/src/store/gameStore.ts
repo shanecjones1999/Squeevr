@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { nanoid } from "nanoid";
 import { GameState, PlayerState, Player, GameScreen } from "../types";
 
 interface GameStore {
@@ -27,8 +26,8 @@ interface GameStore {
     setRoomCode: (code: string) => void;
     setPlayerName: (name: string) => void; // Add setPlayerName
     setClientId: (id: string) => void;
-    createRoom: () => void;
-    joinRoom: (code: string, name: string) => void;
+    createRoomProperties: (roomCode: string) => void;
+    joinRoom: (code: string, name: string, clientId: string) => void;
     startGame: () => void;
     endGame: (winnerId?: string) => void;
     resetGame: () => void;
@@ -76,24 +75,26 @@ export const useGameStore = create<GameStore>((set, get) => ({
     setPlayerName: (name: string) => set({ playerName: name }), // Add setPlayerName
     setClientId: (id: string) => set({ clientId: id }),
 
-    createRoom: () => {
-        const roomCode = nanoid(6).toUpperCase();
+    createRoomProperties: (roomCode: string) => {
         set({
             roomCode,
             isHost: true,
             currentScreen: "create-room",
             gameState: "waiting",
             players: [],
+            clientId: roomCode,
+            playerName: "Host",
         });
     },
 
-    joinRoom: (code, name) => {
+    joinRoom: (code: string, name: string, clientId: string) => {
         set({
             roomCode: code,
             isHost: false,
             playerName: name,
-            currentScreen: "game",
+            currentScreen: "player-screen",
             gameState: "waiting",
+            clientId,
         });
     },
 
