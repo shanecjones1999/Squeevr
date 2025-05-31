@@ -7,7 +7,7 @@ import { usePeerConnection } from "../hooks/usePeerConnection";
 import PlayerList from "../components/game/PlayerList";
 
 const PlayerGameScreen: React.FC = () => {
-    const { gameState, players, clientId } = useGameStore();
+    const { gameState, players, clientId, roomCode } = useGameStore();
     usePeerConnection(clientId); // Get sendMessage from usePeerConnection
 
     return (
@@ -18,19 +18,28 @@ const PlayerGameScreen: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
-            {gameState === "playing" && (
-                <div className="game-container h-full flex flex-col items-center justify-center">
-                    <div className="relative">
-                        <GameCanvas />
-                        <div className="absolute inset-x-0 bottom-8">
-                            <GameControls />
+            {gameState === "waiting" ? (
+                <div className="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700 text-center">
+                    <h2 className="text-2xl font-bold mb-4">
+                        Waiting for game to start
+                    </h2>
+                    <p className="text-gray-300">Room Code: {roomCode}</p>
+                </div>
+            ) : (
+                gameState === "playing" && (
+                    <div className="game-container h-full flex flex-col items-center justify-center">
+                        <div className="relative">
+                            <GameCanvas />
+                            <div className="absolute inset-x-0 bottom-8">
+                                <GameControls />
+                            </div>
+                        </div>
+
+                        <div className="mt-6 w-full max-w-[800px]">
+                            <PlayerList players={players} />
                         </div>
                     </div>
-
-                    <div className="mt-6 w-full max-w-[800px]">
-                        <PlayerList players={players} />
-                    </div>
-                </div>
+                )
             )}
         </motion.div>
     );

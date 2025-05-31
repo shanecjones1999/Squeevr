@@ -12,17 +12,52 @@ export const usePeerConnection = (clientId: string | null) => {
 
         const ws = new WebSocket(
             `ws://localhost:8000/ws/${roomCode}/${
-                isHost ? "tv" : "player"
+                playerName == "Host" ? "tv" : "player"
             }/${clientId}`
         );
 
         ws.onopen = () => {
             console.log("Connected to WebSocket server");
             setIsConnected(true);
+            if (playerName != "Host") {
+                ws.send(JSON.stringify({ type: "join", name: playerName }));
+            }
         };
 
         ws.onmessage = (event) => {
             console.log("Received message:", event.data);
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === "lobby") {
+                    console.log("Lobby update:", data.players);
+                    // Update players in gameStore
+                    const {
+                        addPlayer,
+                        removePlayer,
+                        players: currentPlayers,
+                    } = useGameStore.getState();
+                    const newPlayers = data.players as {
+                        id: string;
+                        name: string;
+                    }[];
+
+                    // Remove players that are not in the new list
+                    currentPlayers.forEach((player) => {
+                        if (!newPlayers.find((p) => p.id === player.id)) {
+                            removePlayer(player.id);
+                        }
+                    });
+
+                    // Add players that are in the new list but not in the current list
+                    newPlayers.forEach((player) => {
+                        if (!currentPlayers.find((p) => p.id === player.id)) {
+                            addPlayer(player.id, player.name);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Error parsing message:", error);
+            }
         };
 
         ws.onclose = () => {
