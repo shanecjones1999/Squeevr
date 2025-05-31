@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useGameStore } from "../store/gameStore";
 
-export const usePeerConnection = (clientId: string | null) => {
+export const usePeerConnection = () => {
     const [isConnected, setIsConnected] = useState(false);
-    const { roomCode, isHost, playerName, updatePlayerState } = useGameStore();
+    const { roomCode, isHost, playerName, clientId, updatePlayerState } = useGameStore();
     const [websocket, setWebsocket] = useState<WebSocket | null>(null);
 
     useEffect(() => {
@@ -98,5 +98,6 @@ export const usePeerConnection = (clientId: string | null) => {
     return {
         isConnected,
         sendMessage,
+        websocket,
     };
 };

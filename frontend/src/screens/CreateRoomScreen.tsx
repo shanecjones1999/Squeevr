@@ -7,13 +7,9 @@ import { usePeerConnection } from "../hooks/usePeerConnection";
 import { GameScreen } from "../types";
 
 const CreateRoomScreen: React.FC = () => {
-    const { roomCode, players, clientId, setScreen, startGame } =
-        useGameStore();
+    const { roomCode, players, clientId, setScreen, startGame } = useGameStore();
     const [copied, setCopied] = useState(false);
-
-    useEffect(() => {}, []);
-
-    const { isConnected } = usePeerConnection(clientId);
+    const { isConnected, websocket } = usePeerConnection();
 
     const copyRoomCode = () => {
         if (roomCode) {
@@ -42,7 +38,7 @@ const CreateRoomScreen: React.FC = () => {
                     <h2 className="text-2xl font-bold text-center">
                         Room Setup
                     </h2>
-                    <div className="w-6"></div> {/* Spacer for alignment */}
+                    <div className="w-6"></div>
                 </div>
 
                 <div className="bg-gray-900 rounded-lg p-4 mb-6 flex items-center justify-between">
@@ -86,10 +82,13 @@ const CreateRoomScreen: React.FC = () => {
                 <div className="flex gap-4">
                     <button
                         className="btn-primary flex-1 flex items-center justify-center gap-2"
-                        disabled={
-                            Object.keys(players).length < 1 || !isConnected
-                        }
-                        onClick={() => startGame()}
+                        disabled={Object.keys(players).length < 1 || !isConnected}
+                        onClick={() => {
+                            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                                websocket.send(JSON.stringify({ type: "start_game" }));
+                                startGame();
+                            }
+                        }}
                     >
                         <Play size={20} />
                         Start Game ({Object.keys(players).length})
