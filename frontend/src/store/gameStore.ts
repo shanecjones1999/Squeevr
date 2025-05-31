@@ -26,6 +26,7 @@ interface GameStore {
     setScreen: (screen: GameScreen) => void;
     setRoomCode: (code: string) => void;
     setPlayerName: (name: string) => void; // Add setPlayerName
+    setClientId: (id: string) => void;
     createRoom: () => void;
     joinRoom: (code: string, name: string) => void;
     startGame: () => void;
@@ -73,6 +74,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     setScreen: (screen) => set({ currentScreen: screen }),
     setRoomCode: (code) => set({ roomCode: code }),
     setPlayerName: (name: string) => set({ playerName: name }), // Add setPlayerName
+    setClientId: (id: string) => set({ clientId: id }),
 
     createRoom: () => {
         const roomCode = nanoid(6).toUpperCase();

@@ -7,38 +7,11 @@ import { usePeerConnection } from "../hooks/usePeerConnection";
 import { GameScreen } from "../types";
 
 const CreateRoomScreen: React.FC = () => {
-    const {
-        setRoomCode,
-        roomCode,
-        players,
-        setScreen,
-        startGame,
-        setPlayerName,
-    } = useGameStore();
+    const { roomCode, players, clientId, setScreen, startGame } =
+        useGameStore();
     const [copied, setCopied] = useState(false);
-    const [clientId, setClientId] = useState<string | null>(null);
 
-    useEffect(() => {
-        const createRoom = async () => {
-            try {
-                const createRoomResponse = await fetch(
-                    "http://localhost:8000/api/create_room",
-                    {
-                        method: "POST",
-                    }
-                );
-                const createRoomData = await createRoomResponse.json();
-                const newRoomCode = createRoomData.room_code;
-                setRoomCode(newRoomCode);
-                setClientId(newRoomCode);
-                setPlayerName("Host");
-            } catch (error) {
-                console.error("Failed to create room:", error);
-            }
-        };
-
-        createRoom();
-    }, [setPlayerName, setRoomCode]);
+    useEffect(() => {}, []);
 
     const { isConnected } = usePeerConnection(clientId);
 

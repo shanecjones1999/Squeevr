@@ -4,7 +4,27 @@ import { Squirrel, Users } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
 
 const HomeScreen: React.FC = () => {
-    const { setScreen, createRoom } = useGameStore();
+    const { setScreen, setRoomCode, setPlayerName, setClientId } =
+        useGameStore();
+
+    const createRoom = async () => {
+        try {
+            const createRoomResponse = await fetch(
+                "http://localhost:8000/api/create_room",
+                {
+                    method: "POST",
+                }
+            );
+            const createRoomData = await createRoomResponse.json();
+            const newRoomCode = createRoomData.room_code;
+            setRoomCode(newRoomCode);
+            setClientId(newRoomCode);
+            setPlayerName("Host");
+            setScreen("create-room");
+        } catch (error) {
+            console.error("Failed to create room:", error);
+        }
+    };
 
     return (
         <motion.div
