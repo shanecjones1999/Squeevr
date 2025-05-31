@@ -8,7 +8,7 @@ export const usePeerConnection = (clientId: string | null) => {
     const [websocket, setWebsocket] = useState<WebSocket | null>(null);
 
     useEffect(() => {
-        if (!roomCode || !clientId) return;
+        if (!roomCode || !clientId || websocket?.readyState === WebSocket.OPEN) return;
 
         const ws = new WebSocket(
             `ws://localhost:8000/ws/${roomCode}/${
@@ -70,6 +70,7 @@ export const usePeerConnection = (clientId: string | null) => {
         ws.onclose = () => {
             console.log("Disconnected from WebSocket server");
             setIsConnected(false);
+            setWebsocket(null);
         };
 
         ws.onerror = (error) => {
@@ -79,7 +80,9 @@ export const usePeerConnection = (clientId: string | null) => {
         setWebsocket(ws);
 
         return () => {
-            ws.close();
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
         };
     }, [roomCode, isHost, playerName, clientId]);
 
