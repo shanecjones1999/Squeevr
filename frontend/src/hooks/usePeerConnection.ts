@@ -36,7 +36,8 @@ export const usePeerConnection = (clientId: string | null) => {
                         removePlayer,
                         players: currentPlayers,
                     } = useGameStore.getState();
-                    const newPlayers = data.players as {
+                    const playersObject = data.players;
+                    const newPlayers = Object.values(playersObject) as {
                         id: string;
                         name: string;
                     }[];

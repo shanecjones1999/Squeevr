@@ -17,6 +17,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
+                        exit={{ opacity: 0, y: 10 }}
                     >
                         <div
                             className="w-4 h-4 rounded-full mr-3 flex-shrink-0"
