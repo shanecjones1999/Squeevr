@@ -3,8 +3,7 @@ import { useGameStore } from "../store/gameStore";
 
 export const usePeerConnection = (clientId: string | null) => {
     const [isConnected, setIsConnected] = useState(false);
-    const { roomCode, isHost, playerName } = useGameStore();
-
+    const { roomCode, isHost, playerName, updatePlayerState } = useGameStore();
     const [websocket, setWebsocket] = useState<WebSocket | null>(null);
 
     useEffect(() => {
@@ -25,32 +24,26 @@ export const usePeerConnection = (clientId: string | null) => {
         };
 
         ws.onmessage = (event) => {
-            console.log("Received message:", event.data);
             try {
                 const data = JSON.parse(event.data);
                 if (data.type === "lobby") {
-                    console.log("Lobby update:", data.players);
-                    // Update players in gameStore
                     const {
                         addPlayer,
                         removePlayer,
                         players: currentPlayers,
                     } = useGameStore.getState();
                     const playersObject = data.players;
-                    const newPlayers = Object.values(playersObject) as {
-                        id: string;
-                        name: string;
-                    }[];
+                    const newPlayers = Object.values(playersObject);
 
                     // Remove players that are not in the new list
                     Object.values(currentPlayers).forEach((player) => {
-                        if (!newPlayers.find((p) => p.id === player.id)) {
+                        if (!newPlayers.find((p: any) => p.id === player.id)) {
                             removePlayer(player.id);
                         }
                     });
 
                     // Add players that are in the new list but not in the current list
-                    newPlayers.forEach((player) => {
+                    newPlayers.forEach((player: any) => {
                         if (
                             !Object.values(currentPlayers).find(
                                 (p) => p.id === player.id
@@ -60,7 +53,15 @@ export const usePeerConnection = (clientId: string | null) => {
                         }
                     });
                 } else if (data.type === "game_update") {
-                    console.log("game update!");
+                    // Update game state
+                    Object.entries(data.players).forEach(([playerId, playerData]: [string, any]) => {
+                        updatePlayerState(playerId, {
+                            x: playerData.x,
+                            y: playerData.y,
+                            isAlive: !playerData.eliminated,
+                            points: playerData.trail || []
+                        });
+                    });
                 }
             } catch (error) {
                 console.error("Error parsing message:", error);
@@ -86,9 +87,9 @@ export const usePeerConnection = (clientId: string | null) => {
         };
     }, [roomCode, isHost, playerName, clientId]);
 
-    const sendMessage = (message: string) => {
+    const sendMessage = (message: any) => {
         if (websocket && websocket.readyState === WebSocket.OPEN) {
-            websocket.send(message);
+            websocket.send(JSON.stringify(message));
         } else {
             console.error("WebSocket is not connected");
         }
