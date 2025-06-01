@@ -5,7 +5,6 @@ const GameCanvas: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { playerStates, players, gameState } = useGameStore();
 
-    // Set fixed canvas size
     useEffect(() => {
         if (canvasRef.current) {
             canvasRef.current.width = 800;
@@ -13,7 +12,6 @@ const GameCanvas: React.FC = () => {
         }
     }, []);
 
-    // Render game state
     useEffect(() => {
         if (!canvasRef.current || gameState !== "playing") return;
 
@@ -21,7 +19,6 @@ const GameCanvas: React.FC = () => {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        // Clear canvas
         ctx.fillStyle = "#1f2937"; // Gray-800
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
