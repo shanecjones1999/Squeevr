@@ -48,7 +48,7 @@ const DEFAULT_PLAYER_STATE: PlayerState = {
     speed: 2,
     isAlive: true,
     color: "",
-    points: [],
+    trail: [],
     turning: null,
 };
 

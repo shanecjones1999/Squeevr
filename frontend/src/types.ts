@@ -30,7 +30,7 @@ export interface PlayerState {
     speed: number;
     isAlive: boolean;
     color: string;
-    points: { x: number; y: number }[];
+    trail: { x: number; y: number }[];
     turning: "left" | "right" | null;
 }
 
