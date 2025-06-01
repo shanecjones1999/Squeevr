@@ -16,7 +16,7 @@ const TvGameScreen: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
-            {gameState.gameStarted && (
+            {gameState.status === "playing" && (
                 <div className="game-container h-full flex flex-col items-center justify-center">
                     <div className="relative">
                         <GameCanvas players={playerList} />

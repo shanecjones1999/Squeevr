@@ -35,6 +35,7 @@ class Game:
         self.eliminated_players_queue = []
         self.countdown = 0
         self.game_starting = False
+        self.status = "lobby"
 
     def add_tv_client(self, tv_client: TvClient):
         if self.tv_client:
@@ -113,6 +114,7 @@ class Game:
             return
 
         self.game_starting = True
+        self.status = "starting"
         self.game_over = False
         self.set_screen_size()
 
@@ -135,6 +137,7 @@ class Game:
         await asyncio.sleep(3)
 
         self.started = True
+        self.status = "playing"
 
         for player_id, socket in self.sockets.items():
             await socket.send_json({
@@ -195,6 +198,7 @@ class Game:
         self.game_over = True
         self.started = False
         self.game_starting = False
+        self.status = "lobby"
 
         placements = self.get_player_placements()
 
@@ -244,6 +248,7 @@ class Game:
             self.game_over = True
             self.started = False
             self.game_starting = False
+            self.status = "lobby"
 
             await self.tv_client.socket.send_json({"type": "game_cancelled"})
 
@@ -318,7 +323,8 @@ class Game:
             "round": self.round_number,
             "scores": self.scores,
             "countdown": self.countdown,
-            "started": self.started
+            "started": self.started,
+            "status": self.status,
         }
 
         await self.tv_client.socket.send_json(game_state)
@@ -380,6 +386,7 @@ class Game:
             "gameStarting": self.game_starting,
             "countdown": self.countdown,
             "color": player.color,
+            "status": self.status,
         }
 
     def get_player_placements(self):

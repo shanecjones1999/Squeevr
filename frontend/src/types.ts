@@ -13,6 +13,7 @@ export interface GameState {
     gameStarting: boolean;
     countdown: number;
     color: string;
+    status: string;
 }
 
 // Player types

@@ -61,7 +61,8 @@ export const usePeerConnection = (clientId: string | null) => {
                     });
                 } else if (data.type === "game_update") {
                     // Update game state
-                    const { updatePlayerState } = useGameStore.getState();
+                    const { updatePlayerState, updateGameState } =
+                        useGameStore.getState();
                     Object.entries(data.players).forEach(
                         ([playerId, playerData]) => {
                             const { x, y, eliminated } = playerData as {
@@ -74,7 +75,8 @@ export const usePeerConnection = (clientId: string | null) => {
                                 y: y,
                                 isAlive: !eliminated,
                             });
-                        }
+                        },
+                        updateGameState({ status: data.status })
                     );
                 } else if (data.type === "player_state_update") {
                     const {
@@ -91,6 +93,7 @@ export const usePeerConnection = (clientId: string | null) => {
                         gameStarting,
                         countdown,
                         color,
+                        status,
                     });
                 }
             } catch (error) {
