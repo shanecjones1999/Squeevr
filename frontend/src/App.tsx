@@ -3,7 +3,6 @@ import { AnimatePresence } from "framer-motion";
 import { useGameStore } from "./store/gameStore";
 import HomeScreen from "./screens/HomeScreen";
 import JoinRoomScreen from "./screens/JoinRoomScreen";
-import GameScreen from "./screens/GameScreen";
 import GameLayout from "./components/layout/GameLayout";
 import PlayerGameScreen from "./screens/PlayerGameScreen";
 import TvScreenManager from "./screens/TvScreenManager";
@@ -21,7 +20,6 @@ function App() {
                 {currentScreen === "join-room" && (
                     <JoinRoomScreen key="join-room" />
                 )}
-                {currentScreen === "game" && <GameScreen key="game" />}
                 {currentScreen === "player-screen" && (
                     <PlayerGameScreen key="player-screen" />
                 )}

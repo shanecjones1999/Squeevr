@@ -5,9 +5,10 @@ import GameCanvas from "../components/game/GameCanvas";
 import PlayerList from "../components/game/PlayerList";
 import CreateRoomScreen from "./CreateRoomScreen";
 import { usePeerConnection } from "../hooks/usePeerConnection";
+import GameOver from "../components/game/GameOver";
 
 const TvScreenManager: React.FC = () => {
-    const { gameState, players, clientId } = useGameStore();
+    const { gameState, players, clientId, startGame, resetGame, leaveRoom } = useGameStore();
     const { isConnected, websocket } = usePeerConnection(clientId);
 
     return (
@@ -35,6 +36,9 @@ const TvScreenManager: React.FC = () => {
                         <PlayerList players={players} />
                     </div>
                 </div>
+            )}
+            {gameState === "ended" && (
+                <GameOver onRestart={resetGame} onExit={leaveRoom} />
             )}
         </motion.div>
     );
