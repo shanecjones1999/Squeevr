@@ -405,9 +405,11 @@ class Game:
         return placements
 
     def set_screen_size(self):
-        self.width = max(800, min(800 + 50 * (7 - 4), 1200))
-        self.height = max(600, min(600 + 50 * (7 - 4),
-                                   900))  #len(self.players)
+        self.width = 800
+        self.height = 800
+        # self.width = max(800, min(800 + 50 * (7 - 4), 1200))
+        # self.height = max(600, min(600 + 50 * (7 - 4),
+        #                            900))  #len(self.players)
 
         # 1200 x 900 is max
         # 800 x 600

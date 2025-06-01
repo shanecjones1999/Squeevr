@@ -59,6 +59,23 @@ export const usePeerConnection = (clientId: string | null) => {
                             addPlayer(player.id, player.name);
                         }
                     });
+                } else if (data.type === "game_update") {
+                    // Update game state
+                    const { updatePlayerState } = useGameStore.getState();
+                    Object.entries(data.players).forEach(
+                        ([playerId, playerData]) => {
+                            const { x, y, eliminated } = playerData as {
+                                x: number;
+                                y: number;
+                                eliminated: boolean;
+                            };
+                            updatePlayerState(playerId, {
+                                x: x,
+                                y: y,
+                                isAlive: !eliminated,
+                            });
+                        }
+                    );
                 }
             } catch (error) {
                 console.error("Error parsing message:", error);
