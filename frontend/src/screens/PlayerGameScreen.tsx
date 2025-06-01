@@ -8,7 +8,7 @@ import PlayerList from "../components/game/PlayerList";
 
 const PlayerGameScreen: React.FC = () => {
     const { gameState, players, clientId, roomCode } = useGameStore();
-    usePeerConnection(clientId); // Get sendMessage from usePeerConnection
+    const { websocket } = usePeerConnection(clientId);
 
     return (
         <motion.div
@@ -31,7 +31,7 @@ const PlayerGameScreen: React.FC = () => {
                         <div className="relative">
                             <GameCanvas />
                             <div className="absolute inset-x-0 bottom-8">
-                                <GameControls />
+                                <GameControls websocket={websocket} />
                             </div>
                         </div>
 

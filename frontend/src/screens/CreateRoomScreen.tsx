@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Copy, ArrowLeft, Play, UserPlus } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
@@ -10,10 +10,7 @@ const CreateRoomScreen: React.FC = () => {
     const { roomCode, players, clientId, setScreen, startGame } =
         useGameStore();
     const [copied, setCopied] = useState(false);
-
-    useEffect(() => {}, []);
-
-    const { isConnected } = usePeerConnection(clientId);
+    const { isConnected, websocket } = usePeerConnection(clientId);
 
     const copyRoomCode = () => {
         if (roomCode) {
@@ -42,7 +39,7 @@ const CreateRoomScreen: React.FC = () => {
                     <h2 className="text-2xl font-bold text-center">
                         Room Setup
                     </h2>
-                    <div className="w-6"></div> {/* Spacer for alignment */}
+                    <div className="w-6"></div>
                 </div>
 
                 <div className="bg-gray-900 rounded-lg p-4 mb-6 flex items-center justify-between">
@@ -89,7 +86,17 @@ const CreateRoomScreen: React.FC = () => {
                         disabled={
                             Object.keys(players).length < 1 || !isConnected
                         }
-                        onClick={() => startGame()}
+                        onClick={() => {
+                            if (
+                                websocket &&
+                                websocket.readyState === WebSocket.OPEN
+                            ) {
+                                websocket.send(
+                                    JSON.stringify({ type: "start_game" })
+                                );
+                                startGame();
+                            }
+                        }}
                     >
                         <Play size={20} />
                         Start Game ({Object.keys(players).length})

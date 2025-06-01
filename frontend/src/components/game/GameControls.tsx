@@ -3,16 +3,33 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useGameStore } from "../../store/gameStore";
 
-const GameControls: React.FC = () => {
+interface GameControlsProps {
+    websocket: WebSocket | null;
+}
+
+const GameControls: React.FC<GameControlsProps> = ({ websocket }) => {
     const { setLocalPlayerDirection } = useGameStore();
+
+    const sendDirection = (direction: "left" | "right" | null) => {
+        if (websocket && websocket.readyState === WebSocket.OPEN) {
+            websocket.send(JSON.stringify({
+                type: "move",
+                state: {
+                    left: direction === "left",
+                    right: direction === "right"
+                }
+            }));
+        }
+        setLocalPlayerDirection(direction);
+    };
 
     // Handle keyboard controls
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "ArrowLeft" || e.key === "a") {
-                setLocalPlayerDirection("left");
+                sendDirection("left");
             } else if (e.key === "ArrowRight" || e.key === "d") {
-                setLocalPlayerDirection("right");
+                sendDirection("right");
             }
         };
 
@@ -23,7 +40,7 @@ const GameControls: React.FC = () => {
                 e.key === "ArrowRight" ||
                 e.key === "d"
             ) {
-                setLocalPlayerDirection(null);
+                sendDirection(null);
             }
         };
 
@@ -34,15 +51,15 @@ const GameControls: React.FC = () => {
             window.removeEventListener("keydown", handleKeyDown);
             window.removeEventListener("keyup", handleKeyUp);
         };
-    }, [setLocalPlayerDirection]);
+    }, [websocket]);
 
     // Touch handlers for mobile controls
     const handleTouchStart = (direction: "left" | "right") => {
-        setLocalPlayerDirection(direction);
+        sendDirection(direction);
     };
 
     const handleTouchEnd = () => {
-        setLocalPlayerDirection(null);
+        sendDirection(null);
     };
 
     return (

@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../store/gameStore";
 import GameOver from "../components/game/GameOver";
-import { usePeerConnection } from "../hooks/usePeerConnection";
+// import { usePeerConnection } from "../hooks/usePeerConnection";
 import PlayerGameScreen from "./PlayerGameScreen";
 import TvGameScreen from "./TvGameScreen";
 import PlayerList from "../components/game/PlayerList";
@@ -18,7 +18,7 @@ const GameScreen: React.FC = () => {
         clientId,
     } = useGameStore();
 
-    const { isConnected } = usePeerConnection(clientId);
+    // const { isConnected } = usePeerConnection(clientId);
 
     return (
         <motion.div
@@ -42,7 +42,7 @@ const GameScreen: React.FC = () => {
                                     <button
                                         className="btn-primary"
                                         disabled={
-                                            players.length < 2 || !isConnected
+                                            Object(players).keys.length < 2 //|| !isConnected
                                         }
                                         onClick={() => startGame()}
                                     >
@@ -60,7 +60,7 @@ const GameScreen: React.FC = () => {
                             <div className="space-y-4">
                                 <div className="p-6 bg-gray-900 rounded-lg">
                                     <p className="text-gray-300">
-                                        {isConnected
+                                        {true //isConnected
                                             ? "Connected to the room. Waiting for the host to start the game..."
                                             : "Connecting to the room..."}
                                     </p>
