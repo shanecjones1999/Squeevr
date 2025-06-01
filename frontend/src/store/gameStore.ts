@@ -101,7 +101,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     startGame: () => {
         set({
             gameState: "playing",
-            currentScreen: "game",
+            // currentScreen: "game",
         });
     },
 
