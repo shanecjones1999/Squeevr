@@ -12,7 +12,7 @@ const TvScreenManager: React.FC = () => {
 
     return (
         <motion.div
-            className="w-full h-full"
+            className="w-full max-w-lg mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
