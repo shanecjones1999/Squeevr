@@ -58,6 +58,7 @@ const defaultGameState: GameState = {
     gameStarting: false,
     countdown: 0,
     color: "#FFFFFF",
+    status: "lobby",
 };
 
 export const useGameStore = create<GameStore>((set, get) => ({
