@@ -3,14 +3,16 @@ import { motion } from "framer-motion";
 import { Copy, ArrowLeft, Play, UserPlus } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
 import PlayerList from "../components/game/PlayerList";
-import { usePeerConnection } from "../hooks/usePeerConnection";
 import { GameScreen } from "../types";
 
-const CreateRoomScreen: React.FC = () => {
-    const { roomCode, players, clientId, setScreen, startGame } =
-        useGameStore();
+interface CreateRoomScreenProps {
+    websocket: WebSocket | null;
+    isConnected: boolean;
+}
+
+const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({ websocket, isConnected }) => {
+    const { roomCode, players, clientId, setScreen, startGame } = useGameStore();
     const [copied, setCopied] = useState(false);
-    const { isConnected, websocket } = usePeerConnection(clientId);
 
     const copyRoomCode = () => {
         if (roomCode) {
@@ -36,9 +38,7 @@ const CreateRoomScreen: React.FC = () => {
                     >
                         <ArrowLeft size={24} />
                     </button>
-                    <h2 className="text-2xl font-bold text-center">
-                        Room Setup
-                    </h2>
+                    <h2 className="text-2xl font-bold text-center">Room Setup</h2>
                     <div className="w-6"></div>
                 </div>
 
@@ -71,9 +71,7 @@ const CreateRoomScreen: React.FC = () => {
                         <div className="bg-gray-900 rounded-lg p-6 text-center text-gray-400 border border-gray-700 border-dashed flex flex-col items-center gap-2">
                             <UserPlus size={24} className="text-gray-500" />
                             <p>Waiting for players to join...</p>
-                            <p className="text-sm">
-                                Share the room code with friends
-                            </p>
+                            <p className="text-sm">Share the room code with friends</p>
                         </div>
                     ) : (
                         <PlayerList players={players} />
@@ -83,17 +81,10 @@ const CreateRoomScreen: React.FC = () => {
                 <div className="flex gap-4">
                     <button
                         className="btn-primary flex-1 flex items-center justify-center gap-2"
-                        disabled={
-                            Object.keys(players).length < 1 || !isConnected
-                        }
+                        disabled={Object.keys(players).length < 1 || !isConnected}
                         onClick={() => {
-                            if (
-                                websocket &&
-                                websocket.readyState === WebSocket.OPEN
-                            ) {
-                                websocket.send(
-                                    JSON.stringify({ type: "start_game" })
-                                );
+                            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                                websocket.send(JSON.stringify({ type: "start_game" }));
                                 startGame();
                             }
                         }}
