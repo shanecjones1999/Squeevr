@@ -23,36 +23,26 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
 
         canvas.width = 800;
         canvas.height = 800;
-        const ctx = canvas.getContext("2d");
+        const ctx = canvasRef.current.getContext("2d");
         if (!ctx) return;
 
-        const draw = (
-            ctx: CanvasRenderingContext2D,
-            width: number,
-            height: number
-        ) => {
+        const renderLoop = () => {
             ctx.fillStyle = "#1f2937"; // Gray-800
-            ctx.fillRect(0, 0, width, height);
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Draw border
             ctx.strokeStyle = "#374151"; // Gray-700
             ctx.lineWidth = 4;
-            ctx.strokeRect(2, 2, width - 4, height - 4);
+            ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
 
             // Draw player trails
             players.forEach((player) => {
                 const playerState = playerStatesRef.current[player.id];
                 if (!playerState) return;
 
-                ctx.fillStyle = player.color;
-                ctx.beginPath();
-                ctx.arc(playerState.x, playerState.y, 3, 0, Math.PI * 2);
-                ctx.fill();
+                player.draw(ctx, playerState);
             });
-        };
 
-        const renderLoop = () => {
-            draw(ctx, canvas.width, canvas.height);
             animationRef.current = requestAnimationFrame(renderLoop);
         };
 

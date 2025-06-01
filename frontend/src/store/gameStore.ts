@@ -48,7 +48,7 @@ const DEFAULT_PLAYER_STATE: PlayerState = {
     speed: 2,
     isAlive: true,
     color: "",
-    trail: [],
+    points: [],
     turning: null,
 };
 
@@ -59,6 +59,16 @@ const defaultGameState: GameState = {
     countdown: 0,
     color: "#FFFFFF",
     status: "lobby",
+};
+
+const drawPlayer = (
+    ctx: CanvasRenderingContext2D,
+    playerState: PlayerState
+) => {
+    ctx.fillStyle = playerState.color;
+    ctx.beginPath();
+    ctx.arc(playerState.x, playerState.y, 3, 0, Math.PI * 2);
+    ctx.fill();
 };
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -168,7 +178,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         ];
 
         const playerColor = colors[Object.keys(players).length % colors.length];
-        const newPlayer = { id, name, color: playerColor };
+        const newPlayer = { id, name, color: playerColor, draw: drawPlayer };
 
         set({
             players: {

@@ -21,6 +21,7 @@ export interface Player {
     id: string;
     name: string;
     color: string;
+    draw: (ctx: CanvasRenderingContext2D, playerState: PlayerState) => void;
 }
 
 export interface PlayerState {
@@ -30,7 +31,7 @@ export interface PlayerState {
     speed: number;
     isAlive: boolean;
     color: string;
-    trail: { x: number; y: number }[];
+    points: { x: number; y: number }[];
     turning: "left" | "right" | null;
 }
 
