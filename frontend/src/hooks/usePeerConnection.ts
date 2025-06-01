@@ -85,6 +85,7 @@ export const usePeerConnection = (clientId: string | null) => {
                         gameStarting,
                         countdown,
                         color,
+                        status,
                     } = data.playerState;
                     const { updateGameState } = useGameStore.getState();
                     updateGameState({
