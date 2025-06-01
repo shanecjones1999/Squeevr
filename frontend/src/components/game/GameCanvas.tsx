@@ -37,6 +37,11 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
             const playerState = playerStates[player.id];
             if (!playerState) return;
 
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            ctx.arc(playerState.x, playerState.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+
             // Draw trail
             ctx.strokeStyle = player.color;
             ctx.lineWidth = 2;
@@ -56,12 +61,12 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
             ctx.stroke();
 
             // Draw player head if alive
-            if (playerState.isAlive) {
-                ctx.fillStyle = player.color;
-                ctx.beginPath();
-                ctx.arc(playerState.x, playerState.y, 3, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            // if (playerState.isAlive) {
+            //     ctx.fillStyle = player.color;
+            //     ctx.beginPath();
+            //     ctx.arc(playerState.x, playerState.y, 3, 0, Math.PI * 2);
+            //     ctx.fill();
+            // }
         });
     }, [playerStates, players, gameState]);
 
