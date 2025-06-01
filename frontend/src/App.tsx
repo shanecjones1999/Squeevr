@@ -4,7 +4,7 @@ import { useGameStore } from "./store/gameStore";
 import HomeScreen from "./screens/HomeScreen";
 import JoinRoomScreen from "./screens/JoinRoomScreen";
 import GameLayout from "./components/layout/GameLayout";
-import PlayerGameScreen from "./screens/PlayerGameScreen";
+import PlayerScreenManager from "./screens/PlayerScreenManager";
 import TvScreenManager from "./screens/TvScreenManager";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
                     <JoinRoomScreen key="join-room" />
                 )}
                 {currentScreen === "player-screen" && (
-                    <PlayerGameScreen key="player-screen" />
+                    <PlayerScreenManager key="player-screen" />
                 )}
             </AnimatePresence>
         </GameLayout>
