@@ -6,6 +6,7 @@ import PlayerList from "../components/game/PlayerList";
 
 const TvGameScreen: React.FC = () => {
     const { gameState, players } = useGameStore();
+    const playerList = Object.values(players);
 
     return (
         <motion.div
@@ -18,7 +19,7 @@ const TvGameScreen: React.FC = () => {
             {gameState === "playing" && (
                 <div className="game-container h-full flex flex-col items-center justify-center">
                     <div className="relative">
-                        <GameCanvas />
+                        <GameCanvas players={playerList} />
                     </div>
 
                     <div className="mt-6 w-full max-w-[800px]">

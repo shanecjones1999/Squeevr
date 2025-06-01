@@ -6,11 +6,14 @@ import PlayerList from "../components/game/PlayerList";
 import CreateRoomScreen from "./CreateRoomScreen";
 import { usePeerConnection } from "../hooks/usePeerConnection";
 import GameOver from "../components/game/GameOver";
+import { useMemo } from "react";
 
 const TvScreenManager: React.FC = () => {
     const { gameState, players, clientId, startGame, resetGame, leaveRoom } =
         useGameStore();
     const { isConnected, websocket } = usePeerConnection(clientId);
+
+    const playerList = useMemo(() => Object.values(players), [players]);
 
     return (
         <motion.div
@@ -20,7 +23,6 @@ const TvScreenManager: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
-            <h2>GAME STATE: {gameState}</h2>
             {gameState === "waiting" && (
                 <CreateRoomScreen
                     websocket={websocket}
@@ -31,7 +33,7 @@ const TvScreenManager: React.FC = () => {
             {gameState === "playing" && (
                 <div className="game-container h-full flex flex-col items-center justify-center">
                     <div className="relative">
-                        <GameCanvas />
+                        <GameCanvas players={playerList} />
                     </div>
 
                     <div className="mt-6 w-full max-w-[800px]">

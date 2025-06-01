@@ -1,9 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { useGameStore } from "../../store/gameStore";
+import { Player } from "../../types";
 
-const GameCanvas: React.FC = () => {
+interface GameCanvasProps {
+    players: Player[];
+}
+
+const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { playerStates, players, gameState } = useGameStore();
+    const { playerStates, gameState } = useGameStore();
 
     useEffect(() => {
         if (canvasRef.current) {
@@ -28,9 +33,9 @@ const GameCanvas: React.FC = () => {
         ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
 
         // Draw player trails
-        Object.entries(playerStates).forEach(([playerId, playerState]) => {
-            const player = players[playerId];
-            if (!player) return;
+        players.forEach((player) => {
+            const playerState = playerStates[player.id];
+            if (!playerState) return;
 
             // Draw trail
             ctx.strokeStyle = player.color;

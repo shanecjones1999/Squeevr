@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../store/gameStore";
-import GameCanvas from "../components/game/GameCanvas";
 import GameControls from "../components/game/GameControls";
 import { usePeerConnection } from "../hooks/usePeerConnection";
 import PlayerList from "../components/game/PlayerList";
@@ -29,7 +28,6 @@ const PlayerGameScreen: React.FC = () => {
                 gameState === "playing" && (
                     <div className="game-container h-full flex flex-col items-center justify-center">
                         <div className="relative">
-                            <GameCanvas />
                             <div className="absolute inset-x-0 bottom-8">
                                 <GameControls websocket={websocket} />
                             </div>
