@@ -79,7 +79,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         set({
             roomCode,
             isHost: true,
-            currentScreen: "create-room",
+            currentScreen: "tv",
             gameState: "waiting",
             players: {},
             clientId: roomCode,

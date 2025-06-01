@@ -14,9 +14,7 @@ function App() {
         <GameLayout>
             <AnimatePresence mode="wait">
                 {currentScreen === "home" && <HomeScreen key="home" />}
-                {currentScreen === "create-room" && (
-                    <TvScreenManager key="create-room" />
-                )}
+                {currentScreen === "tv" && <TvScreenManager key="tv" />}
                 {currentScreen === "join-room" && (
                     <JoinRoomScreen key="join-room" />
                 )}

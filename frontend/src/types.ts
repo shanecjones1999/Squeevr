@@ -4,7 +4,8 @@ export type GameScreen =
     | "create-room"
     | "join-room"
     | "game"
-    | "player-screen";
+    | "player-screen"
+    | "tv";
 // create-room is lobby
 export type GameState = "waiting" | "playing" | "ended";
 

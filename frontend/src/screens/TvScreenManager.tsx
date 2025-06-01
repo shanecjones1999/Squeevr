@@ -8,7 +8,8 @@ import { usePeerConnection } from "../hooks/usePeerConnection";
 import GameOver from "../components/game/GameOver";
 
 const TvScreenManager: React.FC = () => {
-    const { gameState, players, clientId, startGame, resetGame, leaveRoom } = useGameStore();
+    const { gameState, players, clientId, startGame, resetGame, leaveRoom } =
+        useGameStore();
     const { isConnected, websocket } = usePeerConnection(clientId);
 
     return (
@@ -19,11 +20,12 @@ const TvScreenManager: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
+            <h2>GAME STATE: {gameState}</h2>
             {gameState === "waiting" && (
                 <CreateRoomScreen
-                    key="create-room"
                     websocket={websocket}
                     isConnected={isConnected}
+                    key="create-room"
                 />
             )}
             {gameState === "playing" && (
