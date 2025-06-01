@@ -76,6 +76,22 @@ export const usePeerConnection = (clientId: string | null) => {
                             });
                         }
                     );
+                } else if (data.type === "player_state_update") {
+                    const {
+                        gameStarted,
+                        eliminated,
+                        gameStarting,
+                        countdown,
+                        color,
+                    } = data.playerState;
+                    const { updateGameState } = useGameStore.getState();
+                    updateGameState({
+                        gameStarted,
+                        eliminated,
+                        gameStarting,
+                        countdown,
+                        color,
+                    });
                 }
             } catch (error) {
                 console.error("Error parsing message:", error);

@@ -38,6 +38,7 @@ interface GameStore {
     removePlayer: (id: string) => void;
     updatePlayerState: (id: string, state: Partial<PlayerState>) => void;
     setLocalPlayerDirection: (direction: "left" | "right" | null) => void;
+    updateGameState: (state: Partial<GameState>) => void;
 }
 
 const DEFAULT_PLAYER_STATE: PlayerState = {
@@ -51,6 +52,14 @@ const DEFAULT_PLAYER_STATE: PlayerState = {
     turning: null,
 };
 
+const defaultGameState: GameState = {
+    gameStarted: false,
+    eliminated: false,
+    gameStarting: false,
+    countdown: 0,
+    color: "#FFFFFF",
+};
+
 export const useGameStore = create<GameStore>((set, get) => ({
     // Game state
     currentScreen: "home",
@@ -59,7 +68,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     playerName: "",
     clientId: null,
     players: {},
-    gameState: "waiting",
+    gameState: defaultGameState,
 
     // Game settings
     canvasWidth: 800,
@@ -80,7 +89,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             roomCode,
             isHost: true,
             currentScreen: "tv",
-            gameState: "waiting",
+            gameState: defaultGameState,
             players: {},
             clientId: roomCode,
             playerName: "Host",
@@ -93,25 +102,33 @@ export const useGameStore = create<GameStore>((set, get) => ({
             isHost: false,
             playerName: name,
             currentScreen: "player-screen",
-            gameState: "waiting",
+            gameState: defaultGameState,
             clientId,
         });
     },
 
     startGame: () => {
         set({
-            gameState: "playing",
-            // currentScreen: "game",
+            gameState: {
+                ...get().gameState,
+                gameStarted: true,
+            },
         });
     },
 
     endGame: (winnerId) => {
-        set({ gameState: "ended", winner: winnerId });
+        set((state) => ({
+            gameState: {
+                ...state.gameState,
+                eliminated: true,
+            },
+            winner: winnerId,
+        }));
     },
 
     resetGame: () => {
         set({
-            gameState: "waiting",
+            gameState: defaultGameState,
             playerStates: {},
             localPlayerState: null,
         });
@@ -124,7 +141,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             isHost: false,
             playerName: "",
             players: {},
-            gameState: "waiting",
+            gameState: defaultGameState,
             playerStates: {},
             localPlayerState: null,
         });
@@ -207,5 +224,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
                 },
             });
         }
+    },
+
+    updateGameState: (state) => {
+        set({
+            gameState: {
+                ...get().gameState,
+                ...state,
+            },
+        });
     },
 }));

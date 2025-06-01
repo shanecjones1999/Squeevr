@@ -27,9 +27,9 @@ const GameScreen: React.FC = () => {
             transition={{ duration: 0.3 }}
         >
             <div className="h-full flex flex-col">
-                {gameState === "playing" && <TvGameScreen />}
+                {gameState.gameStarted && <TvGameScreen />}
 
-                {gameState === "ended" && (
+                {gameState.eliminated && (
                     <GameOver onRestart={resetGame} onExit={leaveRoom} />
                 )}
             </div>

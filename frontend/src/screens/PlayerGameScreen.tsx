@@ -17,7 +17,7 @@ const PlayerGameScreen: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
-            {gameState === "waiting" ? (
+            {!gameState.gameStarted ? (
                 <div className="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700 text-center">
                     <h2 className="text-2xl font-bold mb-4">
                         Waiting for game to start
@@ -25,7 +25,7 @@ const PlayerGameScreen: React.FC = () => {
                     <p className="text-gray-300">Room Code: {roomCode}</p>
                 </div>
             ) : (
-                gameState === "playing" && (
+                gameState.gameStarted && (
                     <div className="game-container h-full flex flex-col items-center justify-center">
                         <div className="relative">
                             <div className="absolute inset-x-0 bottom-8">

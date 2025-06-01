@@ -23,14 +23,14 @@ const TvScreenManager: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
-            {gameState === "waiting" && (
+            {!gameState.gameStarted && (
                 <CreateRoomScreen
                     websocket={websocket}
                     isConnected={isConnected}
                     key="create-room"
                 />
             )}
-            {gameState === "playing" && (
+            {gameState.gameStarted && (
                 <div className="game-container h-full flex flex-col items-center justify-center">
                     <div className="relative">
                         <GameCanvas players={playerList} />
@@ -41,7 +41,7 @@ const TvScreenManager: React.FC = () => {
                     </div>
                 </div>
             )}
-            {gameState === "ended" && (
+            {gameState.eliminated && (
                 <GameOver onRestart={resetGame} onExit={leaveRoom} />
             )}
         </motion.div>

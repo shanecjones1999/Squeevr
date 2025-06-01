@@ -10,7 +10,7 @@ const PlayerScreenManager: React.FC = () => {
 
     return (
         <>
-            {gameState === "playing" ? (
+            {gameState.gameStarted ? (
                 <GameControls websocket={websocket} />
             ) : (
                 <PlayerGameScreen />

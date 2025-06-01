@@ -6,8 +6,14 @@ export type GameScreen =
     | "game"
     | "player-screen"
     | "tv";
-// create-room is lobby
-export type GameState = "waiting" | "playing" | "ended";
+
+export interface GameState {
+    gameStarted: boolean;
+    eliminated: boolean;
+    gameStarting: boolean;
+    countdown: number;
+    color: string;
+}
 
 // Player types
 export interface Player {
