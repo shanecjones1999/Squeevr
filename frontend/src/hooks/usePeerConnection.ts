@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useGameStore } from "../store/gameStore";
 
 export const usePeerConnection = (clientId: string | null) => {
@@ -12,7 +12,7 @@ export const usePeerConnection = (clientId: string | null) => {
 
         const ws = new WebSocket(
             `ws://localhost:8000/ws/${roomCode}/${
-                playerName == "Host" ? "tv" : "player"
+                isHost ? "tv" : "player"
             }/${clientId}`
         );
 

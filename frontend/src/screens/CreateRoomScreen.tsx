@@ -3,14 +3,20 @@ import { motion } from "framer-motion";
 import { Copy, ArrowLeft, Play, UserPlus } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
 import PlayerList from "../components/game/PlayerList";
-import { usePeerConnection } from "../hooks/usePeerConnection";
 import { GameScreen } from "../types";
 
-const CreateRoomScreen: React.FC = () => {
+interface CreateRoomScreenProps {
+    websocket: WebSocket | null;
+    isConnected: boolean;
+}
+
+const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({
+    websocket,
+    isConnected,
+}) => {
     const { roomCode, players, clientId, setScreen, startGame } =
         useGameStore();
     const [copied, setCopied] = useState(false);
-    const { isConnected, websocket } = usePeerConnection(clientId);
 
     const copyRoomCode = () => {
         if (roomCode) {
