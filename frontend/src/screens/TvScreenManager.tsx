@@ -7,6 +7,7 @@ import CreateRoomScreen from "./CreateRoomScreen";
 import { usePeerConnection } from "../hooks/usePeerConnection";
 import GameOver from "../components/game/GameOver";
 import { useMemo } from "react";
+import CountdownTransition from "../components/game/CountdownTransition";
 
 const TvScreenManager: React.FC = () => {
     const { gameState, players, clientId, resetGame, leaveRoom } =
@@ -32,6 +33,7 @@ const TvScreenManager: React.FC = () => {
             )}
             {gameState.status === "playing" && (
                 <div className="game-container h-full flex flex-col items-center justify-center">
+                    <CountdownTransition countdown={gameState.countdown} />
                     <div className="relative">
                         <GameCanvas players={playerList} />
                     </div>
