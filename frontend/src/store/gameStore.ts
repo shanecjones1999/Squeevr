@@ -37,6 +37,7 @@ interface GameStore {
     addPlayer: (id: string, name: string) => void;
     removePlayer: (id: string) => void;
     updatePlayerState: (id: string, state: Partial<PlayerState>) => void;
+    resetAllPlayerPoints: () => void;
     setLocalPlayerDirection: (direction: "left" | "right" | null) => void;
     updateGameState: (state: Partial<GameState>) => void;
 }
@@ -255,6 +256,20 @@ export const useGameStore = create<GameStore>((set, get) => ({
                 },
             },
         });
+    },
+
+    resetAllPlayerPoints: () => {
+        const { playerStates } = get();
+
+        const updatedStates = Object.fromEntries(
+            Object.entries(playerStates).map(([id, state]) => [
+                id,
+                // Set x and y off the screen.
+                { ...state, points: [], x: -1000, y: -1000 },
+            ])
+        );
+
+        set({ playerStates: updatedStates });
     },
 
     setLocalPlayerDirection: (direction) => {

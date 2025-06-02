@@ -79,12 +79,8 @@ export const usePeerConnection = (clientId: string | null) => {
                         updateGameState({ status: data.status })
                     );
                 } else if (data.type === "reset_round") {
-                    const { playerStates } = useGameStore.getState();
-                    const { updatePlayerState } = useGameStore.getState();
-
-                    Object.keys(playerStates).forEach((playerId) => {
-                        updatePlayerState(playerId, { points: [] });
-                    });
+                    const { resetAllPlayerPoints } = useGameStore.getState();
+                    resetAllPlayerPoints();
                 } else if (data.type === "player_state_update") {
                     const {
                         gameStarted,
