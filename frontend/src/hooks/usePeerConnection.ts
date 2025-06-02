@@ -80,7 +80,10 @@ export const usePeerConnection = (clientId: string | null) => {
                                 radius,
                             });
                         },
-                        updateGameState({ status: data.status })
+                        updateGameState({
+                            status: data.status,
+                            countdown: data.countdown,
+                        })
                     );
                 } else if (data.type === "reset_round") {
                     const { resetAllPlayerPoints } = useGameStore.getState();
