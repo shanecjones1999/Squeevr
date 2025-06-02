@@ -6,7 +6,7 @@ interface CountdownTransitionProps {
 }
 
 const CountdownTransition: React.FC<CountdownTransitionProps> = ({ countdown }) => {
-    if (countdown === 0) return null;
+    if (!countdown) return null;
 
     const colors = {
         3: 'rgb(239, 68, 68)', // red
@@ -15,8 +15,8 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({ countdown }) 
     };
 
     return (
-        <AnimatePresence>
-            <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+            <AnimatePresence mode="wait">
                 <motion.div
                     key={countdown}
                     initial={{ scale: 2, opacity: 0 }}
@@ -24,8 +24,9 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({ countdown }) 
                         scale: [2, 1, 1.2],
                         opacity: [0, 1, 0]
                     }}
+                    exit={{ scale: 0, opacity: 0 }}
                     transition={{ 
-                        duration: 1,
+                        duration: 0.8,
                         times: [0, 0.3, 1],
                         ease: "easeInOut"
                     }}
@@ -38,13 +39,12 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({ countdown }) 
                             opacity: 0.3
                         }}
                         animate={{
-                            scale: [1, 1.5],
+                            scale: [1, 2],
                             opacity: [0.3, 0]
                         }}
                         transition={{
-                            duration: 1,
-                            ease: "easeOut",
-                            times: [0, 1]
+                            duration: 0.8,
+                            ease: "easeOut"
                         }}
                     />
                     <span 
@@ -56,8 +56,8 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({ countdown }) 
                         {countdown}
                     </span>
                 </motion.div>
-            </div>
-        </AnimatePresence>
+            </AnimatePresence>
+        </div>
     );
 };
 

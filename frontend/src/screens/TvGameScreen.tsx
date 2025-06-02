@@ -32,3 +32,5 @@ const TvGameScreen: React.FC = () => {
         </motion.div>
     );
 };
+
+export default TvGameScreen;

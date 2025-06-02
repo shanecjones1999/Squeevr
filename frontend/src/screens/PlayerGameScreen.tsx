@@ -45,4 +45,4 @@ const PlayerGameScreen: React.FC = () => {
     );
 };
 
-export default PlayerGameScreen
+export default PlayerGameScreen;
