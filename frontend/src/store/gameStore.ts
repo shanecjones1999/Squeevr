@@ -52,6 +52,7 @@ const DEFAULT_PLAYER_STATE: PlayerState = {
     points: [],
     turning: null,
     floating: false,
+    radius: 4,
 };
 
 const defaultGameState: GameState = {
@@ -67,14 +68,11 @@ const drawPlayer = (
     ctx: CanvasRenderingContext2D,
     playerState: PlayerState
 ) => {
-    const { color, x, y, points } = playerState;
+    const { color, x, y, points, radius } = playerState;
 
     // Draw trail (tail)
     if (points && points.length > 1) {
         ctx.strokeStyle = color;
-        ctx.lineWidth = 2;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
 
         // ctx.beginPath();
         // ctx.moveTo(points[0].x, points[0].y);
@@ -104,13 +102,14 @@ const drawPlayer = (
             }
         }
 
+        ctx.lineWidth = radius * 2;
         ctx.stroke(); // Draw the final segment
     }
 
     // Draw player head
     ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
     ctx.fill();
 };
 

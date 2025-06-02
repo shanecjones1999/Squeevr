@@ -64,15 +64,20 @@ export const usePeerConnection = (clientId: string | null) => {
                         useGameStore.getState();
                     Object.entries(data.players).forEach(
                         ([playerId, playerData]) => {
-                            const { x, y, eliminated } = playerData as {
-                                x: number;
-                                y: number;
-                                eliminated: boolean;
-                            };
+                            const { x, y, eliminated, floating, radius } =
+                                playerData as {
+                                    x: number;
+                                    y: number;
+                                    eliminated: boolean;
+                                    floating: boolean;
+                                    radius: number;
+                                };
                             updatePlayerState(playerId, {
                                 x: x,
                                 y: y,
                                 isAlive: !eliminated,
+                                floating,
+                                radius,
                             });
                         },
                         updateGameState({ status: data.status })

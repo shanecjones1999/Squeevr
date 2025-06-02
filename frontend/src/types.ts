@@ -34,6 +34,7 @@ export interface PlayerState {
     points: { x: number; y: number }[];
     turning: "left" | "right" | null;
     floating: boolean;
+    radius: number;
 }
 
 // Peer message types
