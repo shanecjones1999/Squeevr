@@ -4,6 +4,7 @@ import { useGameStore } from "../store/gameStore";
 import GameControls from "../components/game/GameControls";
 import { usePeerConnection } from "../hooks/usePeerConnection";
 import PlayerList from "../components/game/PlayerList";
+import CountdownTransition from "../components/game/CountdownTransition";
 
 const PlayerGameScreen: React.FC = () => {
     const { gameState, players, clientId, roomCode } = useGameStore();
@@ -28,6 +29,7 @@ const PlayerGameScreen: React.FC = () => {
                 gameState.status === "playing" && (
                     <div className="game-container h-full flex flex-col items-center justify-center">
                         <div className="relative">
+                            <CountdownTransition countdown={gameState.countdown} />
                             <div className="absolute inset-x-0 bottom-8">
                                 <GameControls websocket={websocket} />
                             </div>
@@ -42,5 +44,3 @@ const PlayerGameScreen: React.FC = () => {
         </motion.div>
     );
 };
-
-export default PlayerGameScreen;

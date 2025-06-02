@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useGameStore } from "../store/gameStore";
 import GameCanvas from "../components/game/GameCanvas";
 import PlayerList from "../components/game/PlayerList";
+import CountdownTransition from "../components/game/CountdownTransition";
 
 const TvGameScreen: React.FC = () => {
     const { gameState, players } = useGameStore();
@@ -20,6 +21,7 @@ const TvGameScreen: React.FC = () => {
                 <div className="game-container h-full flex flex-col items-center justify-center">
                     <div className="relative">
                         <GameCanvas players={playerList} />
+                        <CountdownTransition countdown={gameState.countdown} />
                     </div>
 
                     <div className="mt-6 w-full max-w-[800px]">
@@ -30,5 +32,3 @@ const TvGameScreen: React.FC = () => {
         </motion.div>
     );
 };
-
-export default TvGameScreen;
