@@ -65,9 +65,29 @@ const drawPlayer = (
     ctx: CanvasRenderingContext2D,
     playerState: PlayerState
 ) => {
-    ctx.fillStyle = playerState.color;
+    const { color, x, y, points } = playerState;
+
+    // Draw trail (tail)
+    if (points && points.length > 1) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+
+        ctx.stroke();
+    }
+
+    // Draw player head
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(playerState.x, playerState.y, 3, 0, Math.PI * 2);
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
     ctx.fill();
 };
 
@@ -180,9 +200,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
         const playerColor = colors[Object.keys(players).length % colors.length];
         const newPlayer = { id, name, color: playerColor, draw: drawPlayer };
 
-        set({
+        set((state) => ({
             players: {
-                ...players,
+                ...state.players,
                 [id]: newPlayer,
             },
             playerStates: {
@@ -195,7 +215,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
                     angle: Math.random() * Math.PI * 2,
                 },
             },
-        });
+        }));
     },
 
     removePlayer: (id) => {
@@ -214,12 +234,24 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     updatePlayerState: (id, state) => {
         const { playerStates } = get();
+        const prevState = playerStates[id];
+
+        if (!prevState) return;
+
+        const { x, y } = state;
+
+        const newPoints =
+            x !== undefined && y !== undefined
+                ? [...(prevState.points || []), { x, y }]
+                : prevState.points;
+
         set({
             playerStates: {
                 ...playerStates,
                 [id]: {
-                    ...playerStates[id],
+                    ...prevState,
                     ...state,
+                    points: newPoints,
                 },
             },
         });
