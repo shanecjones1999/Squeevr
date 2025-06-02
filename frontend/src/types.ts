@@ -17,12 +17,12 @@ export interface GameState {
 }
 
 // Player types
-export interface Player {
-    id: string;
-    name: string;
-    color: string;
-    draw: (ctx: CanvasRenderingContext2D, playerState: PlayerState) => void;
-}
+// export interface Player {
+//     id: string;
+//     name: string;
+//     color: string;
+//     draw: (ctx: CanvasRenderingContext2D, playerState: PlayerState) => void;
+// }
 
 export interface PlayerState {
     x: number;

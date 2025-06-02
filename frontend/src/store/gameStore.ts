@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { GameState, PlayerState, Player, GameScreen } from "../types";
+import { GameState, PlayerState, GameScreen } from "../types";
+import Player from "../models/player";
 
 interface GameStore {
     // Game state
@@ -64,45 +65,45 @@ const defaultGameState: GameState = {
     status: "lobby",
 };
 
-const drawPlayer = (
-    ctx: CanvasRenderingContext2D,
-    playerState: PlayerState
-) => {
-    const { color, x, y, points, radius } = playerState;
+// const drawPlayer = (
+//     ctx: CanvasRenderingContext2D,
+//     playerState: PlayerState
+// ) => {
+//     const { color, x, y, points, radius } = playerState;
 
-    if (points && points.length > 1) {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = radius * 2;
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
+//     if (points && points.length > 1) {
+//         ctx.strokeStyle = color;
+//         ctx.lineWidth = radius * 2;
+//         ctx.beginPath();
+//         ctx.moveTo(points[0].x, points[0].y);
 
-        for (let i = 1; i < points.length; i++) {
-            const prev = points[i - 1];
-            const curr = points[i];
+//         for (let i = 1; i < points.length; i++) {
+//             const prev = points[i - 1];
+//             const curr = points[i];
 
-            const dx = Math.abs(curr.x - prev.x);
-            const dy = Math.abs(curr.y - prev.y);
-            const wrapThreshold = 6;
+//             const dx = Math.abs(curr.x - prev.x);
+//             const dy = Math.abs(curr.y - prev.y);
+//             const wrapThreshold = 6;
 
-            if (dx > wrapThreshold || dy > wrapThreshold) {
-                // End the current segment and start a new one
-                ctx.stroke(); // Draw the previous path
-                ctx.beginPath(); // Start a new path
-                ctx.moveTo(curr.x, curr.y); // Move to the new isolated point
-            } else {
-                ctx.lineTo(curr.x, curr.y); // Continue the path
-            }
-        }
+//             if (dx > wrapThreshold || dy > wrapThreshold) {
+//                 // End the current segment and start a new one
+//                 ctx.stroke(); // Draw the previous path
+//                 ctx.beginPath(); // Start a new path
+//                 ctx.moveTo(curr.x, curr.y); // Move to the new isolated point
+//             } else {
+//                 ctx.lineTo(curr.x, curr.y); // Continue the path
+//             }
+//         }
 
-        ctx.stroke(); // Draw the final segment
-    }
+//         ctx.stroke(); // Draw the final segment
+//     }
 
-    // Draw player head
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fill();
-};
+//     // Draw player head
+//     ctx.fillStyle = color;
+//     ctx.beginPath();
+//     ctx.arc(x, y, radius, 0, Math.PI * 2);
+//     ctx.fill();
+// };
 
 export const useGameStore = create<GameStore>((set, get) => ({
     // Game state
@@ -211,7 +212,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         ];
 
         const playerColor = colors[Object.keys(players).length % colors.length];
-        const newPlayer = { id, name, color: playerColor, draw: drawPlayer };
+        const newPlayer = new Player(id, name, playerColor); //{ id, name, color: playerColor, draw: drawPlayer };
 
         set((state) => ({
             players: {

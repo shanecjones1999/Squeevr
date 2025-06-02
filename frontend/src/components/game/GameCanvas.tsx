@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useGameStore } from "../../store/gameStore";
-import { Player } from "../../types";
+//import { Player } from "../../types";
+import Player from "../../models/player";
 
 interface GameCanvasProps {
     players: Player[];
@@ -19,7 +20,12 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas || gameState.status !== "playing" || gameState.countdown > 0) return;
+        if (
+            !canvas ||
+            gameState.status !== "playing" ||
+            gameState.countdown > 0
+        )
+            return;
 
         canvas.width = 800;
         canvas.height = 800;

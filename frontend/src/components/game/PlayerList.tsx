@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Player } from "../../types";
+import Player from "../../models/player";
 
 interface PlayerListProps {
     players: Record<string, Player>;
