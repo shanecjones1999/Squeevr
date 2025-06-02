@@ -44,3 +44,5 @@ const PlayerGameScreen: React.FC = () => {
         </motion.div>
     );
 };
+
+export default PlayerGameScreen
