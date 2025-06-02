@@ -19,7 +19,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas || gameState.status != "playing") return;
+        if (!canvas || gameState.status !== "playing" || gameState.countdown > 0) return;
 
         canvas.width = 800;
         canvas.height = 800;
