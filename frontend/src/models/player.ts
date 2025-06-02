@@ -4,11 +4,31 @@ export default class Player {
     id: string;
     name: string;
     color: string;
+    x = -1000;
+    y = -1000;
+    radius = 4;
+    floating = false;
+    isAlive = true;
+    points: { x: number; y: number }[] = [];
 
     constructor(id: string, name: string, color: string) {
         this.id = id;
         this.name = name;
         this.color = color;
+    }
+
+    update(state: PlayerState) {
+        // If not floating, add point to points.
+        if (!this.floating) {
+            const point = { x: this.x, y: this.y };
+            this.points = [...this.points, point];
+        }
+
+        this.x = state.x;
+        this.y = state.y;
+
+        this.floating = state.floating;
+        this.isAlive = state.isAlive;
     }
 
     draw(ctx: CanvasRenderingContext2D, playerState: PlayerState): void {
