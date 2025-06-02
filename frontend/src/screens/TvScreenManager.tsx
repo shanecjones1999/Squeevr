@@ -9,7 +9,7 @@ import GameOver from "../components/game/GameOver";
 import { useMemo } from "react";
 
 const TvScreenManager: React.FC = () => {
-    const { gameState, players, clientId, startGame, resetGame, leaveRoom } =
+    const { gameState, players, clientId, resetGame, leaveRoom } =
         useGameStore();
     const { isConnected, websocket } = usePeerConnection(clientId);
 
