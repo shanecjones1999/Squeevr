@@ -70,17 +70,9 @@ const drawPlayer = (
 ) => {
     const { color, x, y, points, radius } = playerState;
 
-    // Draw trail (tail)
     if (points && points.length > 1) {
         ctx.strokeStyle = color;
-
-        // ctx.beginPath();
-        // ctx.moveTo(points[0].x, points[0].y);
-
-        // for (let i = 1; i < points.length; i++) {
-        //     ctx.lineTo(points[i].x, points[i].y);
-        // }
-
+        ctx.lineWidth = radius * 2;
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
 
@@ -102,7 +94,6 @@ const drawPlayer = (
             }
         }
 
-        ctx.lineWidth = radius * 2;
         ctx.stroke(); // Draw the final segment
     }
 

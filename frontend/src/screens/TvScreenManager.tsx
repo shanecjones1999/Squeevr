@@ -23,7 +23,6 @@ const TvScreenManager: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
         >
-            <h2>Hello! {gameState.status}</h2>
             {gameState.status != "playing" && (
                 <CreateRoomScreen
                     websocket={websocket}
