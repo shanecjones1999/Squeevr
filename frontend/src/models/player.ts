@@ -1,4 +1,3 @@
-// import { Player } from "../types";
 import { PlayerState } from "../types";
 
 export default class Player {

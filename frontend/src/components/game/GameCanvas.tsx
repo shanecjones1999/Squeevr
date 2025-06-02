@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { useGameStore } from "../../store/gameStore";
-//import { Player } from "../../types";
 import Player from "../../models/player";
 
 interface GameCanvasProps {
