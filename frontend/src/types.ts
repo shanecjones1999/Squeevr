@@ -33,6 +33,7 @@ export interface PlayerState {
     color: string;
     points: { x: number; y: number }[];
     turning: "left" | "right" | null;
+    floating: boolean;
 }
 
 // Peer message types

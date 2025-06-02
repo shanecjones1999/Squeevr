@@ -32,7 +32,7 @@ class Player:
             "radius": self.radius,
             "color": self.color,
             "eliminated": self.eliminated,
-            "is_floating": self.trail.is_floating,
+            "floating": self.trail.is_floating,
             "score": self.score,
         }
 

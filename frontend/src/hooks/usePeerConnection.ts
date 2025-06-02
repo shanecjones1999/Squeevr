@@ -25,7 +25,6 @@ export const usePeerConnection = (clientId: string | null) => {
         };
 
         ws.onmessage = (event) => {
-            console.log("Received message:", event.data);
             try {
                 const data = JSON.parse(event.data);
                 if (data.type === "lobby") {

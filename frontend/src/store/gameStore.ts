@@ -51,6 +51,7 @@ const DEFAULT_PLAYER_STATE: PlayerState = {
     color: "",
     points: [],
     turning: null,
+    floating: false,
 };
 
 const defaultGameState: GameState = {
@@ -75,14 +76,35 @@ const drawPlayer = (
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
 
+        // ctx.beginPath();
+        // ctx.moveTo(points[0].x, points[0].y);
+
+        // for (let i = 1; i < points.length; i++) {
+        //     ctx.lineTo(points[i].x, points[i].y);
+        // }
+
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
 
         for (let i = 1; i < points.length; i++) {
-            ctx.lineTo(points[i].x, points[i].y);
+            const prev = points[i - 1];
+            const curr = points[i];
+
+            const dx = Math.abs(curr.x - prev.x);
+            const dy = Math.abs(curr.y - prev.y);
+            const wrapThreshold = 6;
+
+            if (dx > wrapThreshold || dy > wrapThreshold) {
+                // End the current segment and start a new one
+                ctx.stroke(); // Draw the previous path
+                ctx.beginPath(); // Start a new path
+                ctx.moveTo(curr.x, curr.y); // Move to the new isolated point
+            } else {
+                ctx.lineTo(curr.x, curr.y); // Continue the path
+            }
         }
 
-        ctx.stroke();
+        ctx.stroke(); // Draw the final segment
     }
 
     // Draw player head
@@ -239,10 +261,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
         if (!prevState) return;
 
-        const { x, y } = state;
+        const { x, y } = prevState;
 
         const newPoints =
-            x !== undefined && y !== undefined
+            x !== undefined && y !== undefined && !prevState.floating
                 ? [...(prevState.points || []), { x, y }]
                 : prevState.points;
 
