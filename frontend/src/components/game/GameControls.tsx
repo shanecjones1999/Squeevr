@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useGameStore } from "../../store/gameStore";
@@ -10,37 +10,53 @@ interface GameControlsProps {
 const GameControls: React.FC<GameControlsProps> = ({ websocket }) => {
     const { setLocalPlayerDirection } = useGameStore();
 
-    const sendDirection = (direction: "left" | "right" | null) => {
-        if (websocket && websocket.readyState === WebSocket.OPEN) {
-            websocket.send(JSON.stringify({
-                type: "move",
-                state: {
-                    left: direction === "left",
-                    right: direction === "right"
-                }
-            }));
-        }
-        setLocalPlayerDirection(direction);
-    };
+    const heldDirections = useRef<{ left: boolean; right: boolean }>({
+        left: false,
+        right: false,
+    });
 
-    // Handle keyboard controls
+    const sendDirection = useCallback(
+        (direction: "left" | "right" | null) => {
+            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                websocket.send(
+                    JSON.stringify({
+                        type: "move",
+                        state: {
+                            left: direction === "left",
+                            right: direction === "right",
+                        },
+                    })
+                );
+            }
+            setLocalPlayerDirection(direction);
+        },
+        [websocket, setLocalPlayerDirection]
+    );
+
+    const updateDirection = useCallback(() => {
+        const { left, right } = heldDirections.current;
+        const direction = left ? "left" : right ? "right" : null;
+        sendDirection(direction);
+    }, [sendDirection]);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "ArrowLeft" || e.key === "a") {
-                sendDirection("left");
+                heldDirections.current.left = true;
+                updateDirection();
             } else if (e.key === "ArrowRight" || e.key === "d") {
-                sendDirection("right");
+                heldDirections.current.right = true;
+                updateDirection();
             }
         };
 
         const handleKeyUp = (e: KeyboardEvent) => {
-            if (
-                e.key === "ArrowLeft" ||
-                e.key === "a" ||
-                e.key === "ArrowRight" ||
-                e.key === "d"
-            ) {
-                sendDirection(null);
+            if (e.key === "ArrowLeft" || e.key === "a") {
+                heldDirections.current.left = false;
+                updateDirection();
+            } else if (e.key === "ArrowRight" || e.key === "d") {
+                heldDirections.current.right = false;
+                updateDirection();
             }
         };
 
@@ -51,15 +67,17 @@ const GameControls: React.FC<GameControlsProps> = ({ websocket }) => {
             window.removeEventListener("keydown", handleKeyDown);
             window.removeEventListener("keyup", handleKeyUp);
         };
-    }, [websocket]);
+    }, [updateDirection]);
 
-    // Touch handlers for mobile controls
+    // Touch handlers
     const handleTouchStart = (direction: "left" | "right") => {
-        sendDirection(direction);
+        heldDirections.current[direction] = true;
+        updateDirection();
     };
 
-    const handleTouchEnd = () => {
-        sendDirection(null);
+    const handleTouchEnd = (direction: "left" | "right") => {
+        heldDirections.current[direction] = false;
+        updateDirection();
     };
 
     return (
@@ -71,10 +89,10 @@ const GameControls: React.FC<GameControlsProps> = ({ websocket }) => {
                     backgroundColor: "rgba(79, 70, 229, 0.4)",
                 }}
                 onTouchStart={() => handleTouchStart("left")}
-                onTouchEnd={handleTouchEnd}
+                onTouchEnd={() => handleTouchEnd("left")}
                 onMouseDown={() => handleTouchStart("left")}
-                onMouseUp={handleTouchEnd}
-                onMouseLeave={handleTouchEnd}
+                onMouseUp={() => handleTouchEnd("left")}
+                onMouseLeave={() => handleTouchEnd("left")}
             >
                 <ArrowLeft size={32} className="text-white" />
             </motion.button>
@@ -86,10 +104,10 @@ const GameControls: React.FC<GameControlsProps> = ({ websocket }) => {
                     backgroundColor: "rgba(79, 70, 229, 0.4)",
                 }}
                 onTouchStart={() => handleTouchStart("right")}
-                onTouchEnd={handleTouchEnd}
+                onTouchEnd={() => handleTouchEnd("right")}
                 onMouseDown={() => handleTouchStart("right")}
-                onMouseUp={handleTouchEnd}
-                onMouseLeave={handleTouchEnd}
+                onMouseUp={() => handleTouchEnd("right")}
+                onMouseLeave={() => handleTouchEnd("right")}
             >
                 <ArrowRight size={32} className="text-white" />
             </motion.button>
