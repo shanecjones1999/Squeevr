@@ -44,9 +44,3 @@ export type MessageType =
     | "game-update"
     | "player-update"
     | "game-over";
-
-export interface PeerMessage {
-    type: MessageType;
-    senderId: string;
-    data: any;
-}
