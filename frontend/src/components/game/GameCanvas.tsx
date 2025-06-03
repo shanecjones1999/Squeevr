@@ -45,7 +45,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
                 const playerState = playerStatesRef.current[player.id];
                 if (!playerState) return;
 
-                player.draw(ctx, playerState);
+                player.draw(ctx);
             });
 
             animationRef.current = requestAnimationFrame(renderLoop);

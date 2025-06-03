@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { GameState, PlayerState, GameScreen } from "../types";
+import { GameState, PlayerState, GameScreen, PlayerUpdate } from "../types";
 import Player from "../models/player";
 
 interface GameStore {
@@ -37,7 +37,7 @@ interface GameStore {
     // Player actions
     addPlayer: (id: string, name: string) => void;
     removePlayer: (id: string) => void;
-    updatePlayerState: (id: string, state: Partial<PlayerState>) => void;
+    updatePlayerState: (id: string, state: PlayerUpdate) => void;
     resetAllPlayerPoints: () => void;
     setLocalPlayerDirection: (direction: "left" | "right" | null) => void;
     updateGameState: (state: Partial<GameState>) => void;
@@ -46,8 +46,6 @@ interface GameStore {
 const DEFAULT_PLAYER_STATE: PlayerState = {
     x: 0,
     y: 0,
-    angle: 0,
-    speed: 2,
     isAlive: true,
     color: "",
     points: [],
@@ -64,46 +62,6 @@ const defaultGameState: GameState = {
     color: "#FFFFFF",
     status: "lobby",
 };
-
-// const drawPlayer = (
-//     ctx: CanvasRenderingContext2D,
-//     playerState: PlayerState
-// ) => {
-//     const { color, x, y, points, radius } = playerState;
-
-//     if (points && points.length > 1) {
-//         ctx.strokeStyle = color;
-//         ctx.lineWidth = radius * 2;
-//         ctx.beginPath();
-//         ctx.moveTo(points[0].x, points[0].y);
-
-//         for (let i = 1; i < points.length; i++) {
-//             const prev = points[i - 1];
-//             const curr = points[i];
-
-//             const dx = Math.abs(curr.x - prev.x);
-//             const dy = Math.abs(curr.y - prev.y);
-//             const wrapThreshold = 6;
-
-//             if (dx > wrapThreshold || dy > wrapThreshold) {
-//                 // End the current segment and start a new one
-//                 ctx.stroke(); // Draw the previous path
-//                 ctx.beginPath(); // Start a new path
-//                 ctx.moveTo(curr.x, curr.y); // Move to the new isolated point
-//             } else {
-//                 ctx.lineTo(curr.x, curr.y); // Continue the path
-//             }
-//         }
-
-//         ctx.stroke(); // Draw the final segment
-//     }
-
-//     // Draw player head
-//     ctx.fillStyle = color;
-//     ctx.beginPath();
-//     ctx.arc(x, y, radius, 0, Math.PI * 2);
-//     ctx.fill();
-// };
 
 export const useGameStore = create<GameStore>((set, get) => ({
     // Game state
@@ -247,42 +205,25 @@ export const useGameStore = create<GameStore>((set, get) => ({
     },
 
     updatePlayerState: (id, state) => {
-        const { playerStates } = get();
-        const prevState = playerStates[id];
+        const { players } = get();
+        const player = players[id];
 
-        if (!prevState) return;
+        if (!player) return;
 
-        const { x, y } = prevState;
+        player.update(state);
 
-        const newPoints =
-            x !== undefined && y !== undefined && !prevState.floating
-                ? [...(prevState.points || []), { x, y }]
-                : prevState.points;
-
-        set({
-            playerStates: {
-                ...playerStates,
-                [id]: {
-                    ...prevState,
-                    ...state,
-                    points: newPoints,
-                },
-            },
-        });
+        // Re-set the state with the same object reference to trigger updates
+        set({ players: { ...players, [id]: player } });
     },
 
     resetAllPlayerPoints: () => {
-        const { playerStates } = get();
+        const { players } = get();
 
-        const updatedStates = Object.fromEntries(
-            Object.entries(playerStates).map(([id, state]) => [
-                id,
-                // Set x and y off the screen.
-                { ...state, points: [], x: -1000, y: -1000 },
-            ])
-        );
+        // Call reset on each player (mutate in place)
+        Object.values(players).forEach((player) => player.reset());
 
-        set({ playerStates: updatedStates });
+        // Re-set the state to trigger reactivity
+        set({ players: { ...players } });
     },
 
     setLocalPlayerDirection: (direction) => {

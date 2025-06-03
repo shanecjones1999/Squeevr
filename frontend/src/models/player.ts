@@ -1,4 +1,4 @@
-import { PlayerState } from "../types";
+import { PlayerUpdate } from "../types";
 
 export default class Player {
     id: string;
@@ -17,7 +17,7 @@ export default class Player {
         this.color = color;
     }
 
-    update(state: PlayerState) {
+    update(state: PlayerUpdate) {
         // If not floating, add point to points.
         if (!this.floating) {
             const point = { x: this.x, y: this.y };
@@ -31,8 +31,14 @@ export default class Player {
         this.isAlive = state.isAlive;
     }
 
-    draw(ctx: CanvasRenderingContext2D, playerState: PlayerState): void {
-        const { color, x, y, points, radius } = playerState;
+    reset() {
+        this.points = [];
+        this.x = -1000;
+        this.y = -1000;
+    }
+
+    draw(ctx: CanvasRenderingContext2D): void {
+        const { color, x, y, points, radius } = this;
 
         if (points && points.length > 1) {
             ctx.strokeStyle = color;

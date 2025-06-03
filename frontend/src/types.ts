@@ -16,11 +16,17 @@ export interface GameState {
     status: string;
 }
 
+export interface PlayerUpdate {
+    x: number;
+    y: number;
+    isAlive: boolean;
+    floating: boolean;
+    radius: number;
+}
+
 export interface PlayerState {
     x: number;
     y: number;
-    angle: number;
-    speed: number;
     isAlive: boolean;
     color: string;
     points: { x: number; y: number }[];
