@@ -58,6 +58,14 @@ export const usePeerConnection = (clientId: string | null) => {
                             addPlayer(player.id, player.name);
                         }
                     });
+                } else if (data.type === "game_starting") {
+                    // Handle game starting message from server
+                    const { setGameLoading } = useGameStore.getState();
+                    setGameLoading(true);
+                } else if (data.type === "game_start") {
+                    // Handle actual game start - clear loading state
+                    const { setGameLoading } = useGameStore.getState();
+                    setGameLoading(false);
                 } else if (data.type === "game_update") {
                     // Update game state
                     const { updatePlayerState, updateGameState } =
@@ -97,7 +105,15 @@ export const usePeerConnection = (clientId: string | null) => {
                         color,
                         status,
                     } = data.playerState;
-                    const { updateGameState } = useGameStore.getState();
+                    const { updateGameState, setGameLoading } = useGameStore.getState();
+                    
+                    // Handle loading state based on game starting status
+                    if (gameStarting && !gameStarted) {
+                        setGameLoading(true);
+                    } else if (gameStarted) {
+                        setGameLoading(false);
+                    }
+                    
                     updateGameState({
                         gameStarted,
                         eliminated,

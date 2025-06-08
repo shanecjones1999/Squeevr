@@ -14,7 +14,7 @@ const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({
     websocket,
     isConnected,
 }) => {
-    const { roomCode, players, clientId, setScreen, startGame } =
+    const { roomCode, players, clientId, setScreen, startGame, setGameLoading, gameState } =
         useGameStore();
     const [copied, setCopied] = useState(false);
 
@@ -23,6 +23,14 @@ const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({
             navigator.clipboard.writeText(roomCode);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
+        }
+    };
+
+    const handleStartGame = () => {
+        if (websocket && websocket.readyState === WebSocket.OPEN) {
+            setGameLoading(true); // Set loading state
+            websocket.send(JSON.stringify({ type: "start_game" }));
+            startGame();
         }
     };
 
@@ -39,6 +47,7 @@ const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({
                     <button
                         className="text-gray-400 hover:text-white transition-colors"
                         onClick={() => setScreen("home" as GameScreen)}
+                        disabled={gameState.isLoading}
                     >
                         <ArrowLeft size={24} />
                     </button>
@@ -59,6 +68,7 @@ const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({
                         className="btn-secondary py-2 px-3 flex items-center gap-1"
                         onClick={copyRoomCode}
                         title="Copy Room Code"
+                        disabled={gameState.isLoading}
                     >
                         <Copy size={16} />
                         <span>{copied ? "Copied!" : "Copy"}</span>
@@ -87,26 +97,36 @@ const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({
                 </div>
 
                 <div className="flex gap-4">
-                    <button
+                    <motion.button
                         className="btn-primary flex-1 flex items-center justify-center gap-2"
                         disabled={
-                            Object.keys(players).length < 1 || !isConnected
+                            Object.keys(players).length < 1 || !isConnected || gameState.isLoading
                         }
-                        onClick={() => {
-                            if (
-                                websocket &&
-                                websocket.readyState === WebSocket.OPEN
-                            ) {
-                                websocket.send(
-                                    JSON.stringify({ type: "start_game" })
-                                );
-                                startGame();
-                            }
-                        }}
+                        onClick={handleStartGame}
+                        whileTap={{ scale: 0.98 }}
+                        animate={gameState.isLoading ? { opacity: 0.7 } : { opacity: 1 }}
                     >
-                        <Play size={20} />
-                        Start Game ({Object.keys(players).length})
-                    </button>
+                        {gameState.isLoading ? (
+                            <>
+                                <motion.div
+                                    animate={{ rotate: 360 }}
+                                    transition={{
+                                        duration: 1,
+                                        repeat: Infinity,
+                                        ease: "linear",
+                                    }}
+                                >
+                                    <Play size={20} />
+                                </motion.div>
+                                Starting...
+                            </>
+                        ) : (
+                            <>
+                                <Play size={20} />
+                                Start Game ({Object.keys(players).length})
+                            </>
+                        )}
+                    </motion.button>
                 </div>
 
                 {clientId === null && (

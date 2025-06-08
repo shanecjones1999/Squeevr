@@ -33,6 +33,7 @@ interface GameStore {
     endGame: (winnerId?: string) => void;
     resetGame: () => void;
     leaveRoom: () => void;
+    setGameLoading: (loading: boolean) => void; // Add loading action
 
     // Player actions
     addPlayer: (id: string, name: string) => void;
@@ -61,6 +62,7 @@ const defaultGameState: GameState = {
     countdown: 0,
     color: "#FFFFFF",
     status: "lobby",
+    isLoading: false, // Add default loading state
 };
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -147,6 +149,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
             gameState: defaultGameState,
             playerStates: {},
             localPlayerState: null,
+        });
+    },
+
+    setGameLoading: (loading: boolean) => {
+        set({
+            gameState: {
+                ...get().gameState,
+                isLoading: loading,
+            },
         });
     },
 

@@ -4,6 +4,7 @@ import { useGameStore } from "../store/gameStore";
 import GameCanvas from "../components/game/GameCanvas";
 import PlayerList from "../components/game/PlayerList";
 import CreateRoomScreen from "./CreateRoomScreen";
+import LoadingAnimation from "../components/game/LoadingAnimation";
 import { usePeerConnection } from "../hooks/usePeerConnection";
 import { useMemo } from "react";
 import CountdownTransition from "../components/game/CountdownTransition";
@@ -16,77 +17,52 @@ const TvScreenManager: React.FC = () => {
     const playerList = useMemo(() => Object.values(players), [players]);
 
     return (
-        <AnimatePresence mode="wait">
-            {gameState.status !== "playing" && (
-                <motion.div
-                    key="create-room"
-                    className="w-full max-w-lg mx-auto"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    <CreateRoomScreen
-                        websocket={websocket}
-                        isConnected={isConnected}
-                    />
-                </motion.div>
-            )}
+        <>
+            <AnimatePresence>
+                {gameState.isLoading && (
+                    <LoadingAnimation message="Preparing game..." />
+                )}
+            </AnimatePresence>
 
-            {gameState.status === "playing" && (
-                <motion.div
-                    key="game-ui"
-                    className="w-full max-w-lg mx-auto"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    <div className="game-container h-full flex flex-col items-center justify-center">
-                        <CountdownTransition countdown={gameState.countdown} />
-                        <div className="relative">
-                            <GameCanvas players={playerList} />
+            <AnimatePresence mode="wait">
+                {gameState.status !== "playing" && (
+                    <motion.div
+                        key="create-room"
+                        className="w-full max-w-lg mx-auto"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <CreateRoomScreen
+                            websocket={websocket}
+                            isConnected={isConnected}
+                        />
+                    </motion.div>
+                )}
+
+                {gameState.status === "playing" && (
+                    <motion.div
+                        key="game-ui"
+                        className="w-full max-w-lg mx-auto"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <div className="game-container h-full flex flex-col items-center justify-center">
+                            <CountdownTransition countdown={gameState.countdown} />
+                            <div className="relative">
+                                <GameCanvas players={playerList} />
+                            </div>
+                            <div className="mt-6 w-full max-w-[800px]">
+                                <PlayerList players={players} />
+                            </div>
                         </div>
-                        <div className="mt-6 w-full max-w-[800px]">
-                            <PlayerList players={players} />
-                        </div>
-                    </div>
-                </motion.div>
-            )}
-        </AnimatePresence>
-
-        // <AnimatePresence mode="wait">
-        //     <motion.div
-        //         className="w-full max-w-lg mx-auto"
-        //         initial={{ opacity: 0 }}
-        //         animate={{ opacity: 1 }}
-        //         exit={{ opacity: 0 }}
-        //         transition={{ duration: 0.3 }}
-        //     >
-        //         {gameState.status != "playing" && (
-        //             <CreateRoomScreen
-        //                 websocket={websocket}
-        //                 isConnected={isConnected}
-        //                 key="create-room"
-        //             />
-        //         )}
-        //         {gameState.status === "playing" && (
-        //             <div className="game-container h-full flex flex-col items-center justify-center">
-        //                 <CountdownTransition countdown={gameState.countdown} />
-        //                 <div className="relative">
-        //                     <GameCanvas players={playerList} />
-        //                 </div>
-
-        //                 <div className="mt-6 w-full max-w-[800px]">
-        //                     <PlayerList players={players} />
-        //                 </div>
-        //             </div>
-        //         )}
-        //         {gameState.eliminated && (
-        //             <GameOver onRestart={resetGame} onExit={leaveRoom} />
-        //         )}
-        //     </motion.div>
-        // </AnimatePresence>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 
