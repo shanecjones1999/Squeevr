@@ -14,6 +14,7 @@ export interface GameState {
     countdown: number;
     color: string;
     status: string;
+    isLoading: boolean; // Add loading state
 }
 
 export interface PlayerUpdate {
