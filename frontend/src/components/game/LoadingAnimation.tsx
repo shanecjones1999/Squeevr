@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Loader2, Gamepad2 } from "lucide-react";
+import { Loader2, Squirrel } from "lucide-react";
 
 interface LoadingAnimationProps {
     message?: string;
@@ -34,7 +34,7 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
                     }}
                 >
                     <div className="relative">
-                        <Gamepad2 className="h-12 w-12 text-indigo-500" />
+                        <Squirrel className="h-12 w-12 text-indigo-500" />
                         <motion.div
                             className="absolute inset-0"
                             animate={{
@@ -47,13 +47,13 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
                                 ease: "easeInOut",
                             }}
                         >
-                            <Gamepad2 className="h-12 w-12 text-indigo-300" />
+                            <Squirrel className="h-12 w-12 text-indigo-300" />
                         </motion.div>
                     </div>
                 </motion.div>
 
                 <h3 className="text-xl font-bold text-white mb-2">{message}</h3>
-                
+
                 <div className="flex items-center justify-center gap-2 text-gray-400">
                     <motion.div
                         animate={{ rotate: 360 }}
