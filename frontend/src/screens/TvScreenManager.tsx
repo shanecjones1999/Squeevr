@@ -54,39 +54,6 @@ const TvScreenManager: React.FC = () => {
                 </motion.div>
             )}
         </AnimatePresence>
-
-        // <AnimatePresence mode="wait">
-        //     <motion.div
-        //         className="w-full max-w-lg mx-auto"
-        //         initial={{ opacity: 0 }}
-        //         animate={{ opacity: 1 }}
-        //         exit={{ opacity: 0 }}
-        //         transition={{ duration: 0.3 }}
-        //     >
-        //         {gameState.status != "playing" && (
-        //             <CreateRoomScreen
-        //                 websocket={websocket}
-        //                 isConnected={isConnected}
-        //                 key="create-room"
-        //             />
-        //         )}
-        //         {gameState.status === "playing" && (
-        //             <div className="game-container h-full flex flex-col items-center justify-center">
-        //                 <CountdownTransition countdown={gameState.countdown} />
-        //                 <div className="relative">
-        //                     <GameCanvas players={playerList} />
-        //                 </div>
-
-        //                 <div className="mt-6 w-full max-w-[800px]">
-        //                     <PlayerList players={players} />
-        //                 </div>
-        //             </div>
-        //         )}
-        //         {gameState.eliminated && (
-        //             <GameOver onRestart={resetGame} onExit={leaveRoom} />
-        //         )}
-        //     </motion.div>
-        // </AnimatePresence>
     );
 };
 
