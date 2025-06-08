@@ -17,6 +17,20 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
         playerStatesRef.current = playerStates;
     }, [playerStates]);
 
+    // Set canvas dimensions immediately when component mounts
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        // Set canvas dimensions immediately to prevent size jumping
+        canvas.width = 800;
+        canvas.height = 800;
+        
+        // Set canvas style dimensions to match
+        canvas.style.width = "800px";
+        canvas.style.height = "800px";
+    }, []); // Run only once on mount
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (
@@ -26,12 +40,11 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
         )
             return;
 
-        canvas.width = 800;
-        canvas.height = 800;
-        const ctx = canvasRef.current.getContext("2d");
+        const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
         const renderLoop = () => {
+            // Clear canvas
             ctx.fillStyle = "#1f2937"; // Gray-800
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -58,13 +71,20 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [gameState, players]); // run only on game start or player list change
+    }, [gameState, players]);
 
     return (
         <div className="relative w-[800px] h-[800px] mx-auto">
             <canvas
                 ref={canvasRef}
-                className="bg-gray-800 rounded-lg shadow-xl"
+                width={800}
+                height={800}
+                className="bg-gray-800 rounded-lg shadow-xl w-full h-full"
+                style={{ 
+                    width: "800px", 
+                    height: "800px",
+                    display: "block" // Prevent inline spacing issues
+                }}
             />
         </div>
     );

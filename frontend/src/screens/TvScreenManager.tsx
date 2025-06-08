@@ -44,20 +44,24 @@ const TvScreenManager: React.FC = () => {
                 {gameState.status === "playing" && (
                     <motion.div
                         key="game-ui"
-                        className="w-full max-w-lg mx-auto"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+                        className="w-full mx-auto"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <div className="game-container h-full flex flex-col items-center justify-center">
+                        <div className="game-container h-full flex flex-col items-center justify-center gap-6">
                             <CountdownTransition
                                 countdown={gameState.countdown}
                             />
+                            
+                            {/* Game Canvas Container - Fixed size to prevent jumping */}
                             <div className="relative">
                                 <GameCanvas players={playerList} />
                             </div>
-                            <div className="mt-6 w-full max-w-[800px]">
+                            
+                            {/* Player List - Constrained width */}
+                            <div className="w-full max-w-[800px]">
                                 <PlayerList players={players} />
                             </div>
                         </div>
