@@ -49,15 +49,15 @@ const TvScreenManager: React.FC = () => {
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <div className="game-container h-full flex flex-col items-center justify-center gap-6">
-                            {/* Game Canvas Container - Fixed size to prevent jumping */}
-                            <div className="relative">
-                                <GameCanvas players={playerList} />
+                        <div className="game-container h-full flex flex-row items-center justify-center gap-6">
+                            {/* Player List - Constrained width */}
+                            <div className="w-1/4 max-w-[800px]">
+                                <PlayerList players={players} />
                             </div>
 
-                            {/* Player List - Constrained width */}
-                            <div className="w-full max-w-[800px]">
-                                <PlayerList players={players} />
+                            {/* Game Canvas Container - Fixed size to prevent jumping */}
+                            <div className="relative w-3/4">
+                                <GameCanvas players={playerList} />
                             </div>
                         </div>
                     </motion.div>
