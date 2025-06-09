@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { useGameStore } from "../../store/gameStore";
 import Player from "../../models/player";
+import { AnimatePresence } from "framer-motion";
+import CountdownTransition from "./CountdownTransition";
 
 interface GameCanvasProps {
     players: Player[];
@@ -25,7 +27,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
         // Set canvas dimensions immediately to prevent size jumping
         canvas.width = 800;
         canvas.height = 800;
-        
+
         // Set canvas style dimensions to match
         canvas.style.width = "800px";
         canvas.style.height = "800px";
@@ -75,16 +77,19 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
 
     return (
         <div className="relative w-[800px] h-[800px] mx-auto">
+            <AnimatePresence mode="wait">
+                <CountdownTransition countdown={gameState.countdown} />
+            </AnimatePresence>
             <canvas
                 ref={canvasRef}
                 width={800}
                 height={800}
                 className="bg-gray-800 rounded-lg shadow-xl w-full h-full"
-                style={{ 
-                    width: "800px", 
-                    height: "800px",
-                    display: "block" // Prevent inline spacing issues
-                }}
+                // style={{
+                //     width: "800px",
+                //     height: "800px",
+                //     display: "block", // Prevent inline spacing issues
+                // }}
             />
         </div>
     );

@@ -7,7 +7,6 @@ import CreateRoomScreen from "./CreateRoomScreen";
 import LoadingAnimation from "../components/game/LoadingAnimation";
 import { usePeerConnection } from "../hooks/usePeerConnection";
 import { useMemo } from "react";
-import CountdownTransition from "../components/game/CountdownTransition";
 import { AnimatePresence } from "framer-motion";
 
 const TvScreenManager: React.FC = () => {
@@ -18,7 +17,7 @@ const TvScreenManager: React.FC = () => {
 
     return (
         <>
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {gameState.isLoading && (
                     <LoadingAnimation message="Preparing game..." />
                 )}
@@ -51,15 +50,11 @@ const TvScreenManager: React.FC = () => {
                         transition={{ duration: 0.3 }}
                     >
                         <div className="game-container h-full flex flex-col items-center justify-center gap-6">
-                            <CountdownTransition
-                                countdown={gameState.countdown}
-                            />
-                            
                             {/* Game Canvas Container - Fixed size to prevent jumping */}
                             <div className="relative">
                                 <GameCanvas players={playerList} />
                             </div>
-                            
+
                             {/* Player List - Constrained width */}
                             <div className="w-full max-w-[800px]">
                                 <PlayerList players={players} />
