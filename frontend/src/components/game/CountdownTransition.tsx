@@ -14,7 +14,7 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({
     const progress = ((4 - countdown) / 4) * 100;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
             <AnimatePresence mode="wait">
                 <motion.div
                     key="countdown-overlay"
@@ -29,10 +29,10 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({
                         className="relative flex flex-col items-center"
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1 }}
-                        transition={{ 
-                            type: "spring", 
-                            stiffness: 300, 
-                            damping: 20 
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 20,
                         }}
                     >
                         {/* Glowing background circle */}
@@ -64,7 +64,7 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({
                                     strokeWidth="3"
                                     fill="none"
                                 />
-                                
+
                                 {/* Progress circle */}
                                 <motion.circle
                                     cx="50"
@@ -75,16 +75,18 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({
                                     fill="none"
                                     strokeLinecap="round"
                                     strokeDasharray={`${2 * Math.PI * 45}`}
-                                    initial={{ strokeDashoffset: 2 * Math.PI * 45 }}
-                                    animate={{ 
-                                        strokeDashoffset: 2 * Math.PI * 45 * (1 - progress / 100)
+                                    initial={{
+                                        strokeDashoffset: 2 * Math.PI * 45,
                                     }}
-                                    transition={{ 
-                                        duration: 0.8,
-                                        ease: "easeOut"
+                                    animate={{
+                                        strokeDashoffset:
+                                            2 *
+                                            Math.PI *
+                                            45 *
+                                            (1 - progress / 100),
                                     }}
                                     style={{
-                                        filter: "drop-shadow(0 0 8px rgba(99, 102, 241, 0.6))"
+                                        filter: "drop-shadow(0 0 8px rgba(99, 102, 241, 0.6))",
                                     }}
                                 />
                             </svg>
@@ -96,10 +98,10 @@ const CountdownTransition: React.FC<CountdownTransitionProps> = ({
                                     initial={{ scale: 0, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     exit={{ scale: 0, opacity: 0 }}
-                                    transition={{ 
-                                        type: "spring", 
-                                        stiffness: 400, 
-                                        damping: 15 
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 400,
+                                        damping: 15,
                                     }}
                                     className="text-3xl font-bold text-white"
                                 >

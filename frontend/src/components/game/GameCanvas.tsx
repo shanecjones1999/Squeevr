@@ -76,7 +76,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
     }, [gameState, players]);
 
     return (
-        <div className="relative w-[800px] h-[800px] mx-auto">
+        <div className="relative w-[800px] h-[800px] mx-auto flex items-center justify-center">
             <AnimatePresence mode="wait">
                 <CountdownTransition countdown={gameState.countdown} />
             </AnimatePresence>
@@ -85,11 +85,11 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
                 width={800}
                 height={800}
                 className="bg-gray-800 rounded-lg shadow-xl w-full h-full"
-                // style={{
-                //     width: "800px",
-                //     height: "800px",
-                //     display: "block", // Prevent inline spacing issues
-                // }}
+                style={{
+                    width: "800px",
+                    height: "800px",
+                    display: "block", // Prevent inline spacing issues
+                }}
             />
         </div>
     );
