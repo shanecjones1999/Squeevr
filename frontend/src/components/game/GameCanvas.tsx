@@ -78,8 +78,11 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ players }) => {
     return (
         <div className="relative w-[800px] h-[800px] mx-auto flex items-center justify-center">
             <AnimatePresence mode="wait">
-                <CountdownTransition countdown={gameState.countdown} />
+                {gameState.countdown > 0 && (
+                    <CountdownTransition countdown={gameState.countdown} />
+                )}
             </AnimatePresence>
+
             <canvas
                 ref={canvasRef}
                 width={800}
