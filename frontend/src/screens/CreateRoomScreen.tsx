@@ -14,8 +14,15 @@ const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({
     websocket,
     isConnected,
 }) => {
-    const { roomCode, players, clientId, setScreen, startGame, setGameLoading, gameState } =
-        useGameStore();
+    const {
+        roomCode,
+        players,
+        clientId,
+        setScreen,
+        startGame,
+        setGameLoading,
+        gameState,
+    } = useGameStore();
     const [copied, setCopied] = useState(false);
 
     const copyRoomCode = () => {
@@ -100,11 +107,17 @@ const CreateRoomScreen: React.FC<CreateRoomScreenProps> = ({
                     <motion.button
                         className="btn-primary flex-1 flex items-center justify-center gap-2"
                         disabled={
-                            Object.keys(players).length < 1 || !isConnected || gameState.isLoading
+                            Object.keys(players).length < 1 ||
+                            !isConnected ||
+                            gameState.isLoading
                         }
                         onClick={handleStartGame}
                         whileTap={{ scale: 0.98 }}
-                        animate={gameState.isLoading ? { opacity: 0.7 } : { opacity: 1 }}
+                        animate={
+                            gameState.isLoading
+                                ? { opacity: 0.7 }
+                                : { opacity: 1 }
+                        }
                     >
                         {gameState.isLoading ? (
                             <>
