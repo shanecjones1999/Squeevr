@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Squirrel, Users } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const HomeScreen: React.FC = () => {
     const { setScreen, createRoomProperties } = useGameStore();
@@ -9,7 +10,7 @@ const HomeScreen: React.FC = () => {
     const createRoom = async () => {
         try {
             const createRoomResponse = await fetch(
-                "http://localhost:8000/api/create_room",
+                `${apiUrl}/api/create_room`,
                 {
                     method: "POST",
                 }
