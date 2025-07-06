@@ -10,7 +10,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
     return (
         <div className="bg-gray-900 rounded-lg overflow-hidden">
             <ul className="divide-y divide-gray-800">
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                     {Object.values(players).map((player, index) => (
                         <motion.li
                             key={player.id}
