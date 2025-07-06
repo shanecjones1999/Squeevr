@@ -9,6 +9,8 @@ const HomeScreen: React.FC = () => {
 
     const createRoom = async () => {
         try {
+            console.log("API URL:", apiUrl);
+
             const createRoomResponse = await fetch(
                 `${apiUrl}/api/create_room`,
                 {
