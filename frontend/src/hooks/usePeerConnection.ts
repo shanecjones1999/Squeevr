@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useGameStore } from "../store/gameStore";
+const wsUrl = import.meta.env.VITE_WS_URL;
 
 export const usePeerConnection = (clientId: string | null) => {
     const [isConnected, setIsConnected] = useState(false);
@@ -11,9 +12,7 @@ export const usePeerConnection = (clientId: string | null) => {
         if (!roomCode || !clientId) return;
 
         const ws = new WebSocket(
-            `ws://localhost:8000/ws/${roomCode}/${
-                isHost ? "tv" : "player"
-            }/${clientId}`
+            `${wsUrl}/ws/${roomCode}/${isHost ? "tv" : "player"}/${clientId}`
         );
 
         ws.onopen = () => {
@@ -105,15 +104,16 @@ export const usePeerConnection = (clientId: string | null) => {
                         color,
                         status,
                     } = data.playerState;
-                    const { updateGameState, setGameLoading } = useGameStore.getState();
-                    
+                    const { updateGameState, setGameLoading } =
+                        useGameStore.getState();
+
                     // Handle loading state based on game starting status
                     if (gameStarting && !gameStarted) {
                         setGameLoading(true);
                     } else if (gameStarted) {
                         setGameLoading(false);
                     }
-                    
+
                     updateGameState({
                         gameStarted,
                         eliminated,

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, LogIn } from "lucide-react";
 import { useGameStore } from "../store/gameStore";
 import { GameScreen } from "../types";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const JoinRoomScreen: React.FC = () => {
     const { setScreen, joinRoom } = useGameStore();
@@ -24,19 +25,16 @@ const JoinRoomScreen: React.FC = () => {
         setError("");
 
         try {
-            const response = await fetch(
-                "http://localhost:8000/api/join_room",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        room_code: roomCode.toUpperCase(),
-                        name: name,
-                    }),
-                }
-            );
+            const response = await fetch(`${apiUrl}/api/join_room`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    room_code: roomCode.toUpperCase(),
+                    name: name,
+                }),
+            });
 
             const data = await response.json();
 
